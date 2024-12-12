@@ -1,13 +1,19 @@
 package Main;
 
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-public class Engine extends JFrame {
+public class Engine {
 	// Marco de la ventana
 	private JFrame frame;
 	// Panel general que ocupa toda la ventana
@@ -55,7 +61,39 @@ public class Engine extends JFrame {
 	 * @param title
 	 */
 	public Engine(String title) {
-		this.frame.setName(title);
+		//Configuracion del JFrame
+		this.frame = new JFrame(title);		
+		//Inizalizamos el JPanel
+		this.contentPanel = new JPanel();
+		displayPanel = new JPanel();
+		//Los dos 4 indican la cantidad de filas, columnas y el primer 5 la separacion entre las columnas en horizontal y el otro la separacion en vertical
+		buttonPanel = new JPanel(new GridLayout(4, 4, 5, 5)); 
+		
+		// Inicializar display
+        display = new JTextField();
+        
+        // Inicializar botones numéricos
+        n0 = new JButton("0");
+        n1 = new JButton("1");
+        n2 = new JButton("2");
+        n3 = new JButton("3");
+        n4 = new JButton("4");
+        n5 = new JButton("5");
+        n6 = new JButton("6");
+        n7 = new JButton("7");
+        n8 = new JButton("8");
+        n9 = new JButton("9");
+        
+        // Inicializar botones de operadores
+        divide = new JButton("/");
+        multiply = new JButton("*");
+        subtract = new JButton("-");
+        add = new JButton("+");
+        equal = new JButton("=");
+        reset = new JButton("C");
+        
+		setSettings();
+		addActionEvent();
 	}
 
 	/**
@@ -64,7 +102,44 @@ public class Engine extends JFrame {
 	 * SETFEATURESBUTTON(),
 	 */
 	public void setSettings() {
-
+		this.frame.setSize(500, 700);
+		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.frame.setLocationRelativeTo(null);
+		
+		this.contentPanel.setBackground(Color.LIGHT_GRAY);
+		this.contentPanel.setLayout(new FlowLayout());
+		
+		//Configuracion del panel norte y panel sur
+		display.setPreferredSize(new Dimension(480, 100));
+		display.setFont(new Font("Arial", Font.PLAIN, 30));
+		display.setHorizontalAlignment(JTextField.RIGHT);
+		display.setEditable(false);
+		displayPanel.add(display);
+		contentPanel.add(displayPanel);
+		
+		
+		//Configurando botones en el frame
+		buttonPanel.add(n1);
+		buttonPanel.add(n2);
+		buttonPanel.add(n3);
+		buttonPanel.add(equal);
+		buttonPanel.add(n4);
+		buttonPanel.add(n5);
+		buttonPanel.add(n6);
+		buttonPanel.add(add);
+		buttonPanel.add(n7);
+		buttonPanel.add(n8);
+		buttonPanel.add(n9);
+		buttonPanel.add(subtract);
+		buttonPanel.add(n0);
+		buttonPanel.add(reset);
+		buttonPanel.add(multiply);
+		buttonPanel.add(divide);
+		contentPanel.add(buttonPanel);
+		
+		//Frame visibility
+		this.frame.add(contentPanel);
+		this.frame.setVisible(true);
 	}
 
 	/**
@@ -91,7 +166,14 @@ public class Engine extends JFrame {
 	 * PULSA.
 	 */
 	public void addActionEvent() {
-
+		JButton[] numberButtons = {n0, n1, n2, n3, n4, n5, n6, n7, n8, n9};
+		
+		for (JButton button: numberButtons) {
+			button.addActionListener(e -> {
+				String buttonText = display.getText();
+				display.setText(buttonText + button.getText());
+			});
+		}
 	}
 
 	/**
