@@ -6,6 +6,8 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -13,7 +15,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-public class Engine {
+public class Engine extends JFrame implements ActionListener{
 	// Marco de la ventana
 	private JFrame frame;
 	// Panel general que ocupa toda la ventana
@@ -41,8 +43,10 @@ public class Engine {
 	private JButton add;
 	private JButton equal;
 	private JButton reset;
-
+	
+	private ArrayList<String> displayArray = new ArrayList<String>();
 	// Tipos de boton
+	//Sirven solo para decorar
 	private enum ButtonType {
 		REGULAR, OPERATOR
 	}
@@ -92,6 +96,10 @@ public class Engine {
         equal = new JButton("=");
         reset = new JButton("C");
         
+        num1 = 0;
+        num2 = 0;
+        result = 0;
+       
 		setSettings();
 		addActionEvent();
 	}
@@ -100,6 +108,8 @@ public class Engine {
 	 * CONCRETAMENTE, SE ENCARGA DE,ENTRE OTRAS COSAS: PONER LOS LAYOUTS DE LOS
 	 * PANELES Y AÑADIRLOS, AÑADIR LOS BOTONES Y LLAMAR AL MÉTODO
 	 * SETFEATURESBUTTON(),
+	 * 
+	 * AÑADIRLE LOS COLORES
 	 */
 	public void setSettings() {
 		this.frame.setSize(500, 700);
@@ -156,7 +166,8 @@ public class Engine {
 	 *                cambiar las características.
 	 */
 	public void setFeaturesButton(JButton _button, ButtonType _type) {
-
+		//Si este boton es de tipo regular = color turquesa
+		//Si este boton es de tipo operador = color azul
 	}
 
 	/**
@@ -168,12 +179,16 @@ public class Engine {
 	public void addActionEvent() {
 		JButton[] numberButtons = {n0, n1, n2, n3, n4, n5, n6, n7, n8, n9};
 		
-		for (JButton button: numberButtons) {
-			button.addActionListener(e -> {
-				String buttonText = display.getText();
-				display.setText(buttonText + button.getText());
-			});
+		for (JButton numbers: numberButtons) {
+			numbers.addActionListener(this);
 		}
+		
+		JButton[] operatorButtons = {divide, multiply, subtract, add, equal, reset};
+		
+		for (JButton operators: operatorButtons) {
+			operators.addActionListener(this);
+		}
+		
 	}
 
 	/**
@@ -184,9 +199,62 @@ public class Engine {
 	 * MODIFICANDO EL TRIBUTO THIS.RESULT Y ACTUALIZANDO EL TEXTO EN EL DISPLAY
 	 */
 	public void operation() {
-
+		//Switch del atributo operadors
+		String operadores = "+ - / *";
+		
+		if (displayArray.isEmpty()) {
+			display.setText("Error: No input");
+		}
+		
+		//Resolucion del array
+		int i = 0;
+		
+		while (i < displayArray.size()) {
+			
+			try {
+				//Comprobacion de si el numero es negativo
+				if (displayArray.get(i).equals("-") && displayArray.get(i - 1) == null ) {
+					//Comprobacion de si hay algo despues del operador -
+					if ( i + 1 < displayArray.size()) {
+						ArrayList<String> temporalNumber = new ArrayList<String>();
+						
+						while (i < displayArray.size() - 1 &&!displayArray.get(i + 1).equals("+") &&!displayArray.get(i + 1).equals("-") &&!displayArray.get(i + 1).equals("/")&&!displayArray.get(i + 1).equals("*")) {
+							temporalNumber.add(displayArray.get(i + 1));
+							
+							i++;
+						}
+						
+						int h = 0;
+						String tempValue = "";
+						while (h < temporalNumber.size()){
+							tempValue += temporalNumber.get(h);
+							h++;
+						}
+						
+						if (this.num1 == 0) {
+							num1 = - Integer.parseInt(tempValue);
+							System.out.println(num1);
+						}else {
+							num2 = - Integer.parseInt(tempValue);
+							System.out.println(num2);
+						}
+						
+						temporalNumber.clear();
+						h = 0;
+						
+					}else {
+						display.setText("Error: Expected number before -");
+					}
+				}
+				
+				i++;
+				
+			}catch (NumberFormatException e) {
+				display.setText("Error: First input must be a numbre or a negative number");
+			}			
+		}
+		
 	}
-
 	/**
 	 * ESTE MÉTODO SE ENCARGA DE OBTENER LA INFORMACIÓN QUE HAYA EN EL DISPLAY
 	 * (NÚMEROS INTRODUCIDOS Y OPERACIÓN QUE SE DEBE REALIZAR) Y LLAMAR AL MÉTODO
@@ -198,5 +266,19 @@ public class Engine {
 		// Recogemos el tipo de boton que se ha pulsado y su texto
 		Object source = e.getSource();
 		String input_text = e.getActionCommand();
+		String displayText = display.getText();
+		
+		if (input_text.equals("=")) {
+			operation();
+		}
+		else if (input_text.equals("C")) {
+			this.displayArray.clear();
+			display.setText("");
+		}else {
+			displayArray.add(input_text);
+			display.setText(displayText + input_text);
+		}
+		
+		System.out.println(displayArray + " " + displayArray.size());
 	}
 }
