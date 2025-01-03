@@ -8,6 +8,8 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -15,7 +17,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-public class Engine extends JFrame implements ActionListener{
+public class Engine extends JFrame implements ActionListener {
 	// Marco de la ventana
 	private JFrame frame;
 	// Panel general que ocupa toda la ventana
@@ -43,10 +45,11 @@ public class Engine extends JFrame implements ActionListener{
 	private JButton add;
 	private JButton equal;
 	private JButton reset;
-	
+
 	private ArrayList<String> displayArray = new ArrayList<String>();
+
 	// Tipos de boton
-	//Sirven solo para decorar
+	// Sirven solo para decorar
 	private enum ButtonType {
 		REGULAR, OPERATOR
 	}
@@ -65,41 +68,42 @@ public class Engine extends JFrame implements ActionListener{
 	 * @param title
 	 */
 	public Engine(String title) {
-		//Configuracion del JFrame
-		this.frame = new JFrame(title);		
-		//Inizalizamos el JPanel
+		// Configuracion del JFrame
+		this.frame = new JFrame(title);
+		// Inizalizamos el JPanel
 		this.contentPanel = new JPanel();
 		displayPanel = new JPanel();
-		//Los dos 4 indican la cantidad de filas, columnas y el primer 5 la separacion entre las columnas en horizontal y el otro la separacion en vertical
-		buttonPanel = new JPanel(new GridLayout(4, 4, 5, 5)); 
-		
+		// Los dos 4 indican la cantidad de filas, columnas y el primer 5 la separacion
+		// entre las columnas en horizontal y el otro la separacion en vertical
+		buttonPanel = new JPanel(new GridLayout(4, 4, 5, 5));
+
 		// Inicializar display
-        display = new JTextField();
-        
-        // Inicializar botones numéricos
-        n0 = new JButton("0");
-        n1 = new JButton("1");
-        n2 = new JButton("2");
-        n3 = new JButton("3");
-        n4 = new JButton("4");
-        n5 = new JButton("5");
-        n6 = new JButton("6");
-        n7 = new JButton("7");
-        n8 = new JButton("8");
-        n9 = new JButton("9");
-        
-        // Inicializar botones de operadores
-        divide = new JButton("/");
-        multiply = new JButton("*");
-        subtract = new JButton("-");
-        add = new JButton("+");
-        equal = new JButton("=");
-        reset = new JButton("C");
-        
-        num1 = 0;
-        num2 = 0;
-        result = 0;
-       
+		display = new JTextField();
+
+		// Inicializar botones numéricos
+		n0 = new JButton("0");
+		n1 = new JButton("1");
+		n2 = new JButton("2");
+		n3 = new JButton("3");
+		n4 = new JButton("4");
+		n5 = new JButton("5");
+		n6 = new JButton("6");
+		n7 = new JButton("7");
+		n8 = new JButton("8");
+		n9 = new JButton("9");
+
+		// Inicializar botones de operadores
+		divide = new JButton("/");
+		multiply = new JButton("*");
+		subtract = new JButton("-");
+		add = new JButton("+");
+		equal = new JButton("=");
+		reset = new JButton("C");
+
+		num1 = 0;
+		num2 = 0;
+		result = 0;
+
 		setSettings();
 		addActionEvent();
 	}
@@ -115,20 +119,19 @@ public class Engine extends JFrame implements ActionListener{
 		this.frame.setSize(500, 700);
 		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.frame.setLocationRelativeTo(null);
-		
+
 		this.contentPanel.setBackground(Color.LIGHT_GRAY);
 		this.contentPanel.setLayout(new FlowLayout());
-		
-		//Configuracion del panel norte y panel sur
+
+		// Configuracion del panel norte y panel sur
 		display.setPreferredSize(new Dimension(480, 100));
 		display.setFont(new Font("Arial", Font.PLAIN, 30));
 		display.setHorizontalAlignment(JTextField.RIGHT);
 		display.setEditable(false);
 		displayPanel.add(display);
 		contentPanel.add(displayPanel);
-		
-		
-		//Configurando botones en el frame
+
+		// Configurando botones en el frame
 		buttonPanel.add(n1);
 		buttonPanel.add(n2);
 		buttonPanel.add(n3);
@@ -146,8 +149,8 @@ public class Engine extends JFrame implements ActionListener{
 		buttonPanel.add(multiply);
 		buttonPanel.add(divide);
 		contentPanel.add(buttonPanel);
-		
-		//Frame visibility
+
+		// Frame visibility
 		this.frame.add(contentPanel);
 		this.frame.setVisible(true);
 	}
@@ -166,8 +169,8 @@ public class Engine extends JFrame implements ActionListener{
 	 *                cambiar las características.
 	 */
 	public void setFeaturesButton(JButton _button, ButtonType _type) {
-		//Si este boton es de tipo regular = color turquesa
-		//Si este boton es de tipo operador = color azul
+		// Si este boton es de tipo regular = color turquesa
+		// Si este boton es de tipo operador = color azul
 	}
 
 	/**
@@ -177,18 +180,18 @@ public class Engine extends JFrame implements ActionListener{
 	 * PULSA.
 	 */
 	public void addActionEvent() {
-		JButton[] numberButtons = {n0, n1, n2, n3, n4, n5, n6, n7, n8, n9};
-		
-		for (JButton numbers: numberButtons) {
+		JButton[] numberButtons = { n0, n1, n2, n3, n4, n5, n6, n7, n8, n9 };
+
+		for (JButton numbers : numberButtons) {
 			numbers.addActionListener(this);
 		}
-		
-		JButton[] operatorButtons = {divide, multiply, subtract, add, equal, reset};
-		
-		for (JButton operators: operatorButtons) {
+
+		JButton[] operatorButtons = { divide, multiply, subtract, add, equal, reset };
+
+		for (JButton operators : operatorButtons) {
 			operators.addActionListener(this);
 		}
-		
+
 	}
 
 	/**
@@ -199,62 +202,29 @@ public class Engine extends JFrame implements ActionListener{
 	 * MODIFICANDO EL TRIBUTO THIS.RESULT Y ACTUALIZANDO EL TEXTO EN EL DISPLAY
 	 */
 	public void operation() {
-		//Switch del atributo operadors
-		String operadores = "+ - / *";
-		
-		if (displayArray.isEmpty()) {
-			display.setText("Error: No input");
+		try {
+			switch (this.operation) {
+			case '+':
+				this.result = this.num1 + this.num2;
+				break;
+			case '-':
+				this.result = this.num1 - this.num2;
+				break;
+			case '*':
+				this.result = this.num1 * this.num2;
+				break;
+			case '/':
+				this.result = this.num1 / this.num2;
+				break;
+			}
+
+		} catch (NumberFormatException e) {
+			display.setText("Error: First input must be a numbre or a negative number");
 		}
-		
-		//Resolucion del array
-		int i = 0;
-		
-		while (i < displayArray.size()) {
-			
-			try {
-				//Comprobacion de si el numero es negativo
-				if (displayArray.get(i).equals("-") && displayArray.get(i - 1) == null ) {
-					//Comprobacion de si hay algo despues del operador -
-					if ( i + 1 < displayArray.size()) {
-						ArrayList<String> temporalNumber = new ArrayList<String>();
-						
-						while (i < displayArray.size() - 1 &&!displayArray.get(i + 1).equals("+") &&!displayArray.get(i + 1).equals("-") &&!displayArray.get(i + 1).equals("/")&&!displayArray.get(i + 1).equals("*")) {
-							temporalNumber.add(displayArray.get(i + 1));
-							
-							i++;
-						}
-						
-						int h = 0;
-						String tempValue = "";
-						while (h < temporalNumber.size()){
-							tempValue += temporalNumber.get(h);
-							h++;
-						}
-						
-						if (this.num1 == 0) {
-							num1 = - Integer.parseInt(tempValue);
-							System.out.println(num1);
-						}else {
-							num2 = - Integer.parseInt(tempValue);
-							System.out.println(num2);
-						}
-						
-						temporalNumber.clear();
-						h = 0;
-						
-					}else {
-						display.setText("Error: Expected number before -");
-					}
-				}
-				
-				i++;
-				
-			}catch (NumberFormatException e) {
-				display.setText("Error: First input must be a numbre or a negative number");
-			}			
-		}
-		
+
+		this.display.setText(Integer.toString(this.result));
 	}
+
 	/**
 	 * ESTE MÉTODO SE ENCARGA DE OBTENER LA INFORMACIÓN QUE HAYA EN EL DISPLAY
 	 * (NÚMEROS INTRODUCIDOS Y OPERACIÓN QUE SE DEBE REALIZAR) Y LLAMAR AL MÉTODO
@@ -267,18 +237,25 @@ public class Engine extends JFrame implements ActionListener{
 		Object source = e.getSource();
 		String input_text = e.getActionCommand();
 		String displayText = display.getText();
-		
+
 		if (input_text.equals("=")) {
+			ArrayList<String> digits = new ArrayList<String>();
+			Pattern pDigit = Pattern.compile("((?<=^|[^\\d])-?\\d+(?=$|[^\\d])|[+\\-*\\/()])");
+			Matcher mDigit = pDigit.matcher(displayText);
+			
+			while (mDigit.find()) {
+				digits.add(mDigit.group(0));
+			}
+
+			this.operation = digits.get(1).charAt(0);
+			this.num1 = Integer.parseInt(digits.get(0));
+			this.num2 = Integer.parseInt(digits.get(2));
+			
 			operation();
-		}
-		else if (input_text.equals("C")) {
-			this.displayArray.clear();
+		} else if (input_text.equals("C")) {
 			display.setText("");
-		}else {
-			displayArray.add(input_text);
+		} else {
 			display.setText(displayText + input_text);
 		}
-		
-		System.out.println(displayArray + " " + displayArray.size());
 	}
 }
