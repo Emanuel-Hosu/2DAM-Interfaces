@@ -46,8 +46,7 @@ public class Engine extends JFrame implements ActionListener {
 	private JButton equal;
 	private JButton reset;
 
-	private ArrayList<String> displayArray = new ArrayList<String>();
-
+	private boolean mathError;
 	// Tipos de boton
 	// Sirven solo para decorar
 	private enum ButtonType {
@@ -103,6 +102,7 @@ public class Engine extends JFrame implements ActionListener {
 		num1 = 0;
 		num2 = 0;
 		result = 0;
+		mathError = false;
 
 		setSettings();
 		addActionEvent();
@@ -153,6 +153,19 @@ public class Engine extends JFrame implements ActionListener {
 		// Frame visibility
 		this.frame.add(contentPanel);
 		this.frame.setVisible(true);
+		
+		Pattern pButtonType = Pattern.compile("\\d");
+		
+		for (int i = 0; i < buttonPanel.getComponentCount(); i++) {
+			JButton tempButton = (JButton) buttonPanel.getComponent(i);
+			Matcher mButtonType = pButtonType.matcher(tempButton.getText());
+			
+			if (mButtonType.find()) {
+				this.setFeaturesButton(tempButton, ButtonType.REGULAR);
+			}else {
+				this.setFeaturesButton(tempButton, ButtonType.OPERATOR);
+			}
+		}
 	}
 
 	/**
@@ -170,7 +183,12 @@ public class Engine extends JFrame implements ActionListener {
 	 */
 	public void setFeaturesButton(JButton _button, ButtonType _type) {
 		// Si este boton es de tipo regular = color turquesa
-		// Si este boton es de tipo operador = color azul
+		// Si este boton es de tipo operador = color azuL
+		if (_type == ButtonType.OPERATOR) {
+			
+		}else {
+			
+		}
 	}
 
 	/**
@@ -214,15 +232,23 @@ public class Engine extends JFrame implements ActionListener {
 				this.result = this.num1 * this.num2;
 				break;
 			case '/':
+				if (this.num2 == 0) {
+					display.setText("Math ERROR");
+					this.mathError = true;
+					return;
+				}
 				this.result = this.num1 / this.num2;
 				break;
 			}
 
-		} catch (NumberFormatException e) {
+		}catch(
+
+	NumberFormatException e)
+	{
 			display.setText("Error: First input must be a numbre or a negative number");
 		}
 
-		this.display.setText(Integer.toString(this.result));
+	this.display.setText(Integer.toString(this.result));
 	}
 
 	/**
@@ -238,7 +264,7 @@ public class Engine extends JFrame implements ActionListener {
 		String input_text = e.getActionCommand();
 		String displayText = display.getText();
 
-		if (input_text.equals("=")) {
+		if (input_text.equals("=") && !this.mathError) {
 			ArrayList<String> digits = new ArrayList<String>();
 			Pattern pDigit = Pattern.compile("((?<=^|[^\\d])-?\\d+(?=$|[^\\d])|[+\\-*\\/()])");
 			Matcher mDigit = pDigit.matcher(displayText);
@@ -254,8 +280,12 @@ public class Engine extends JFrame implements ActionListener {
 			operation();
 		} else if (input_text.equals("C")) {
 			display.setText("");
+			this.mathError = false;
 		} else {
-			display.setText(displayText + input_text);
+			if (!this.mathError) {
+				display.setText(displayText + input_text);
+			}
+			
 		}
 	}
 }
