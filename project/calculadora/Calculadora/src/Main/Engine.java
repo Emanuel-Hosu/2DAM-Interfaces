@@ -155,12 +155,6 @@ public class Engine extends JFrame implements ActionListener {
 
 		this.contentPanel.setLayout(new BorderLayout());
 
-		Color purpleBackground = new Color(75, 0, 130);
-		this.contentPanel.setBackground(purpleBackground);
-		this.topPanel.setBackground(purpleBackground);
-		this.displayPanel.setBackground(purpleBackground);
-		this.buttonPanel.setBackground(purpleBackground);
-
 		this.topPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		this.modoOscuro.setPreferredSize(new Dimension(40, 40));
 		this.modoOscuro.setBackground(Color.white);
@@ -241,7 +235,7 @@ public class Engine extends JFrame implements ActionListener {
 
 			// Decoracion botones de operador
 			if (isOscuro == false) {
-				_button.setBackground(Color.WHITE);
+				_button.setBackground(Color.white);
 				_button.setForeground(purpleBackground);
 				_button.setBorder(new LineBorder(pinkColor, 2, true));
 			} else {
@@ -307,6 +301,13 @@ public class Engine extends JFrame implements ActionListener {
 				this.buttonPanel.setBackground(Color.black);
 				this.display.setBackground(Color.black);
 				this.display.setForeground(Color.white);
+			}else {
+				this.contentPanel.setBackground(purpleBackground);
+				this.topPanel.setBackground(purpleBackground);
+				this.displayPanel.setBackground(purpleBackground);
+				this.buttonPanel.setBackground(purpleBackground);
+				this.display.setBackground(Color.white);
+				this.display.setForeground(Color.black);
 			}
 		}
 
