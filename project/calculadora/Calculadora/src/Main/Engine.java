@@ -7,6 +7,8 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -16,6 +18,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.border.EtchedBorder;
+import javax.swing.border.LineBorder;
 
 public class Engine extends JFrame implements ActionListener {
 	// Marco de la ventana
@@ -26,6 +30,8 @@ public class Engine extends JFrame implements ActionListener {
 	private JPanel displayPanel;
 	// Panel sur que contiene los botones
 	private JPanel buttonPanel;
+	// Panel extra para el modo oscuro
+	private JPanel topPanel;
 	// Display
 	private JTextField display;
 	// Botones
@@ -45,8 +51,21 @@ public class Engine extends JFrame implements ActionListener {
 	private JButton add;
 	private JButton equal;
 	private JButton reset;
+	// Botones extra
+	private JButton modoOscuro;
+	private JButton del;
+	private JButton x2;
+	private JButton x3;
+	private JButton ans;
+	private JButton log;
+	private JButton sin;
+	private JButton cos;
+	private JButton tan;
+	private JButton ln;
 
 	private boolean mathError;
+	private boolean isOscuro = true;
+
 	// Tipos de boton
 	// Sirven solo para decorar
 	private enum ButtonType {
@@ -71,15 +90,17 @@ public class Engine extends JFrame implements ActionListener {
 		this.frame = new JFrame(title);
 		// Inizalizamos el JPanel
 		this.contentPanel = new JPanel();
-		displayPanel = new JPanel();
+		this.displayPanel = new JPanel();
+		
+		//Panel extra
+		this.topPanel = new JPanel();
 		// Los dos 4 indican la cantidad de filas, columnas y el primer 5 la separacion
 		// entre las columnas en horizontal y el otro la separacion en vertical
-		buttonPanel = new JPanel(new GridLayout(4, 4, 5, 5));
+		this.buttonPanel = new JPanel(new GridLayout(5, 5, 5, 5));
 
-		// Inicializar display
-		display = new JTextField();
+		this.display = new JTextField();
 
-		// Inicializar botones numéricos
+		// Bbotones numéricos
 		n0 = new JButton("0");
 		n1 = new JButton("1");
 		n2 = new JButton("2");
@@ -91,13 +112,25 @@ public class Engine extends JFrame implements ActionListener {
 		n8 = new JButton("8");
 		n9 = new JButton("9");
 
-		// Inicializar botones de operadores
+		// Bbotones de operadores
 		divide = new JButton("/");
 		multiply = new JButton("*");
 		subtract = new JButton("-");
 		add = new JButton("+");
 		equal = new JButton("=");
 		reset = new JButton("C");
+
+		// Botones extra
+		modoOscuro = new JButton("o");
+		del = new JButton("DEL");
+		x2 = new JButton("^2");
+		x3 = new JButton("^3");
+		ans = new JButton("Ans");
+		log = new JButton("log");
+		sin = new JButton("sin");
+		cos = new JButton("cos");
+		tan = new JButton("tan");
+		ln = new JButton("ln");
 
 		num1 = 0;
 		num2 = 0;
@@ -116,79 +149,140 @@ public class Engine extends JFrame implements ActionListener {
 	 * AÑADIRLE LOS COLORES
 	 */
 	public void setSettings() {
-		this.frame.setSize(500, 700);
+		this.frame.setSize(600, 700);
 		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.frame.setLocationRelativeTo(null);
-
-		this.contentPanel.setBackground(Color.LIGHT_GRAY);
+		
+		Color purpleBackground = new Color(75, 0, 130);
+		this.contentPanel.setBackground(purpleBackground);
 		this.contentPanel.setLayout(new FlowLayout());
+		this.displayPanel.setBackground(purpleBackground);
+		this.buttonPanel.setBackground(purpleBackground);
+		
+		this.modoOscuro.setPreferredSize(new Dimension(40, 40));
+		this.modoOscuro.setFont(new Font("Arial", Font.PLAIN, 11));
+		this.topPanel.add(modoOscuro);
+		this.contentPanel.add(topPanel);
 
-		// Configuracion del panel norte y panel sur
-		display.setPreferredSize(new Dimension(480, 100));
-		display.setFont(new Font("Arial", Font.PLAIN, 30));
-		display.setHorizontalAlignment(JTextField.RIGHT);
-		display.setEditable(false);
-		displayPanel.add(display);
-		contentPanel.add(displayPanel);
+		this.display.setPreferredSize(new Dimension(420, 100));
+		this.display.setFont(new Font("Arial", Font.PLAIN, 40));
+		this.display.setHorizontalAlignment(JTextField.RIGHT);
+		this.display.setEditable(false);
+		this.displayPanel.add(this.display);
+		this.contentPanel.add(displayPanel);
+		
+		// Fila 0 aniadida extra
+		this.buttonPanel.add(log);
+		this.buttonPanel.add(sin);
+		this.buttonPanel.add(cos);
+		this.buttonPanel.add(tan);
+		this.buttonPanel.add(ln);
+		
+		// Primera fila
+		this.buttonPanel.add(n7);
+		this.buttonPanel.add(n8);
+		this.buttonPanel.add(n9);
+		this.buttonPanel.add(del);
+		this.buttonPanel.add(reset);
 
-		// Configurando botones en el frame
-		buttonPanel.add(n1);
-		buttonPanel.add(n2);
-		buttonPanel.add(n3);
-		buttonPanel.add(equal);
-		buttonPanel.add(n4);
-		buttonPanel.add(n5);
-		buttonPanel.add(n6);
-		buttonPanel.add(add);
-		buttonPanel.add(n7);
-		buttonPanel.add(n8);
-		buttonPanel.add(n9);
-		buttonPanel.add(subtract);
-		buttonPanel.add(n0);
-		buttonPanel.add(reset);
-		buttonPanel.add(multiply);
-		buttonPanel.add(divide);
-		contentPanel.add(buttonPanel);
+		// Segunda Fila
+		this.buttonPanel.add(n4);
+		this.buttonPanel.add(n5);
+		this.buttonPanel.add(n6);
+		this.buttonPanel.add(multiply);
+		this.buttonPanel.add(divide);
 
-		// Frame visibility
-		this.frame.add(contentPanel);
+		// Tercera fila
+		this.buttonPanel.add(n1);
+		this.buttonPanel.add(n2);
+		this.buttonPanel.add(n3);
+		this.buttonPanel.add(add);
+		this.buttonPanel.add(subtract);
+
+		// Cuarta fila
+		this.buttonPanel.add(n0);
+		this.buttonPanel.add(x2);
+		this.buttonPanel.add(x3);
+		this.buttonPanel.add(ans);
+		this.buttonPanel.add(equal);
+
+		// Aniadirlo todo
+		this.contentPanel.add(this.buttonPanel);
+
+		// Visibilidad
+		this.frame.add(this.contentPanel);
 		this.frame.setVisible(true);
-		
-		Pattern pButtonType = Pattern.compile("\\d");
-		
+
+		Pattern pButtonType = Pattern.compile("^\\d");
+
 		for (int i = 0; i < buttonPanel.getComponentCount(); i++) {
 			JButton tempButton = (JButton) buttonPanel.getComponent(i);
 			Matcher mButtonType = pButtonType.matcher(tempButton.getText());
-			
+
 			if (mButtonType.find()) {
 				this.setFeaturesButton(tempButton, ButtonType.REGULAR);
-			}else {
+			} else {
 				this.setFeaturesButton(tempButton, ButtonType.OPERATOR);
 			}
 		}
 	}
 
-	/**
-	 * CONTIENE UNA CONDICIÓN QUE PERMITE DISTINGUIR SI EL TIPO DE BOTÓN PASA COMO
-	 * PARÁMETRO ES DE TIPO REGULAR U OPERATOR.
-	 * 
-	 * EN FUNCIÓN DE ESTO, PINTARÁ EL BOTÓN DE UN COLOR U OTRO. PUEDES AÑADIRLE (Y
-	 * ES ALGO QUE SE TENDRÁ EN CUENTA) MÁS CARACTERÍSTICAS TALES COMO CAMBIO DEL
-	 * TIPO DE LETRA, BORDES, ETC.
-	 * 
-	 * @param _button identifica el botón sobre el que se van a cambiar las
-	 *                características.
-	 * @param _type   identifica de qué tipo es el botón sobre el que se van a
-	 *                cambiar las características.
-	 */
 	public void setFeaturesButton(JButton _button, ButtonType _type) {
-		// Si este boton es de tipo regular = color turquesa
-		// Si este boton es de tipo operador = color azuL
+		// Persobalizacion para todos los botones
+		_button.setPreferredSize(new Dimension(80, 60));
+
+		Color purpleBackground = new Color(75, 0, 130);
+		Color pinkColor = new Color(255, 105, 180);
+
 		if (_type == ButtonType.OPERATOR) {
-			
-		}else {
-			
+			// Decoracion botones de operador
+			_button.setBackground(Color.WHITE);
+			_button.setForeground(purpleBackground);
+			_button.setFont(new Font("Arial", Font.BOLD, 20));
+
+			_button.setBorder(new LineBorder(pinkColor, 2, true));
+
+			// Efecto hover
+			_button.addMouseListener(new MouseAdapter() {
+				public void mouseEntered(MouseEvent e) {
+					_button.setBackground(new Color(240, 240, 240));
+				}
+
+				public void mouseExited(MouseEvent e) {
+					_button.setBackground(Color.WHITE);
+				}
+			});
+
+		} else {
+			// Decoracion botones de digitos
+			_button.setBackground(pinkColor);
+			_button.setForeground(Color.WHITE); // Texto blanco
+			_button.setFont(new Font("Arial", Font.PLAIN, 18));
+
+			_button.setBorder(new LineBorder(Color.white, 2, true));
+
+			// Efecto hover
+			_button.addMouseListener(new MouseAdapter() {
+				public void mouseEntered(MouseEvent e) {
+					_button.setBackground(new Color(255, 182, 193));
+				}
+
+				public void mouseExited(MouseEvent e) {
+					_button.setBackground(pinkColor);
+				}
+			});
 		}
+
+		// Efecto de presionado para todos los botones
+		_button.addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent evt) {
+				_button.setBackground(_button.getBackground().darker());
+			}
+
+			public void mouseReleased(java.awt.event.MouseEvent evt) {
+				_button.setBackground(_button.getBackground().brighter());
+			}
+		});
 	}
 
 	/**
@@ -204,7 +298,7 @@ public class Engine extends JFrame implements ActionListener {
 			numbers.addActionListener(this);
 		}
 
-		JButton[] operatorButtons = { divide, multiply, subtract, add, equal, reset };
+		JButton[] operatorButtons = { divide, multiply, subtract, add, equal, reset, del, x2, x3, ans , log, sin, cos, tan};
 
 		for (JButton operators : operatorButtons) {
 			operators.addActionListener(this);
@@ -220,35 +314,27 @@ public class Engine extends JFrame implements ActionListener {
 	 * MODIFICANDO EL TRIBUTO THIS.RESULT Y ACTUALIZANDO EL TEXTO EN EL DISPLAY
 	 */
 	public void operation() {
-		try {
-			switch (this.operation) {
-			case '+':
-				this.result = this.num1 + this.num2;
-				break;
-			case '-':
-				this.result = this.num1 - this.num2;
-				break;
-			case '*':
-				this.result = this.num1 * this.num2;
-				break;
-			case '/':
-				if (this.num2 == 0) {
-					display.setText("Math ERROR");
-					this.mathError = true;
-					return;
-				}
-				this.result = this.num1 / this.num2;
-				break;
+		switch (this.operation) {
+		case '+':
+			this.result = this.num1 + this.num2;
+			break;
+		case '-':
+			this.result = this.num1 - this.num2;
+			break;
+		case '*':
+			this.result = this.num1 * this.num2;
+			break;
+		case '/':
+			if (this.num2 == 0) {
+				this.display.setText("Math ERROR");
+				this.mathError = true;
+				return;
 			}
-
-		}catch(
-
-	NumberFormatException e)
-	{
-			display.setText("Error: First input must be a numbre or a negative number");
+			this.result = this.num1 / this.num2;
+			break;
 		}
 
-	this.display.setText(Integer.toString(this.result));
+		this.display.setText(Integer.toString(this.result));
 	}
 
 	/**
@@ -262,30 +348,114 @@ public class Engine extends JFrame implements ActionListener {
 		// Recogemos el tipo de boton que se ha pulsado y su texto
 		Object source = e.getSource();
 		String input_text = e.getActionCommand();
-		String displayText = display.getText();
+		String displayText = this.display.getText();
+		// System.out.println("Se ha pulsado " + input_text);
 
 		if (input_text.equals("=") && !this.mathError) {
 			ArrayList<String> digits = new ArrayList<String>();
 			Pattern pDigit = Pattern.compile("((?<=^|[^\\d])-?\\d+(?=$|[^\\d])|[+\\-*\\/()])");
 			Matcher mDigit = pDigit.matcher(displayText);
-			
+
 			while (mDigit.find()) {
 				digits.add(mDigit.group(0));
 			}
 
-			this.operation = digits.get(1).charAt(0);
-			this.num1 = Integer.parseInt(digits.get(0));
-			this.num2 = Integer.parseInt(digits.get(2));
-			
-			operation();
+			try {
+				this.operation = digits.get(1).charAt(0);
+				this.num1 = Integer.parseInt(digits.get(0));
+				this.num2 = Integer.parseInt(digits.get(2));
+
+				operation();
+			} catch (Exception e2) {
+				System.out.println("Faltan parametros " + e2);
+				this.mathError = true;
+			}
 		} else if (input_text.equals("C")) {
-			display.setText("");
+			this.display.setText("");
 			this.mathError = false;
-		} else {
-			if (!this.mathError) {
-				display.setText(displayText + input_text);
+		} else if (input_text.equals("DEL")) {
+			try {
+				displayText = displayText.substring(0, displayText.length() - 1);
+				this.display.setText(displayText);
+			} catch (Exception e2) {
+				// TODO: handle exception
+				System.out.println("No se ha podido borrar ningun numero " + e2);
 			}
 			
+		} else if (input_text.equals("^2")) {
+			try {
+	            displayText = elevarNumero(displayText, 2);
+	            this.display.setText(displayText);
+	        } catch (Exception e2) {
+	            System.out.println("Error al elevar al cuadrado " + e2);
+	            this.mathError = true;
+	        }
+		} else if (input_text.equals("^3")) {
+			try {
+	            displayText = elevarNumero(displayText, 3);
+	            this.display.setText(displayText);
+	        } catch (Exception e2) {
+	            System.out.println("Error al elevar al cubo " + e2);
+	            this.mathError = true;
+	        }
+		}else if (input_text.equals("Ans")) {
+			this.display.setText(displayText + this.result);
+		}else {
+			if (!this.mathError) {
+				this.display.setText(displayText + input_text);
+			}
+
 		}
+	}
+	
+	public String elevarNumero(String cadena, int elevador) {
+		if (cadena.isEmpty()) {
+	        return "";
+	    }
+		
+		StringBuilder numero = new StringBuilder();
+	    int i = cadena.length() - 1;
+	    boolean encontradoNumero = false;
+	    
+	    while (i >= 0) {
+	        char c = cadena.charAt(i);
+	        if (Character.isDigit(c)) {
+	        	// Insert en la posicion 0 la C
+	            numero.insert(0, c);
+	            encontradoNumero = true;
+	            // Comprueba si C vale -, en caso de que valga menos comprueba que si i esta en la posicion 0 y si antes del - no hay otro caracter, manejo de numeros negativos --
+	        } else if (c == '-' && i > 0 && !Character.isDigit(cadena.charAt(i-1))) {
+	            numero.insert(0, c);
+	            System.out.println(numero.toString());
+	            break;
+	        } else if (encontradoNumero) {
+	            break;
+	        }
+	        i--;
+	    }
+	    
+	    // safety check
+	    if (numero.length() == 0) {
+	        return cadena;
+	    }
+
+	    int num = Integer.parseInt(numero.toString());
+	    int resultado = 0;
+	    
+	    if (elevador == 2) {
+	    	resultado = getSquare(num);
+	    }else {
+	    	resultado = getCubed(num);
+	    }
+
+	    return cadena.substring(0, i + 1) + resultado;
+	}
+	
+	public int getSquare(int num) {
+		return num * num;
+	}
+	
+	public int getCubed(int num) {
+		return num * num * num;
 	}
 }
