@@ -207,7 +207,7 @@ public class Engine extends JFrame implements ActionListener {
 		// Aniadirlo todo
 		this.contentPanel.add(this.buttonPanel, BorderLayout.SOUTH);
 
-		// Visibilidad
+		// Visibilidad al frame
 		this.frame.add(this.contentPanel);
 		this.frame.setVisible(true);
 
