@@ -16,12 +16,15 @@ import java.util.regex.Pattern;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.border.EtchedBorder;
 import javax.swing.border.LineBorder;
 
+/**
+ * Clase Engine que implementa una calculadora con funcionalidad básica y
+ * soporte para modo oscuro. Hereda de JFrame e implementa ActionListener para
+ * manejar eventos de acción en los botones.
+ */
 public class Engine extends JFrame implements ActionListener {
 	// Marco de la ventana
 	private JFrame frame;
@@ -78,13 +81,11 @@ public class Engine extends JFrame implements ActionListener {
 	private char operation;
 
 	/**
-	 * LA CONSTRUCTORA DEBE INSTANCIAR, ENTRE OTRAS COSAS, LOS ATRIBUTOS QUE SE HAN
-	 * MENCIONADO ANTERIORMENTE.
-	 * 
-	 * AL FINAL DE LA CONSTRUCTORA DEBE APARECER UNA LLAMADA A SETSETTINGS() Y
-	 * ADDACTIONEVENT().
-	 * 
-	 * @param title
+	 * Constructor de la clase Engine. Inicializa los componentes gráficos y llama a
+	 * los métodos setSettings() y addActionEvent() para configurar los elementos de
+	 * la calculadora.
+	 *
+	 * @param title Título de la ventana de la calculadora.
 	 */
 	public Engine(String title) {
 		// Configuracion del JFrame
@@ -144,11 +145,8 @@ public class Engine extends JFrame implements ActionListener {
 	}
 
 	/**
-	 * CONCRETAMENTE, SE ENCARGA DE,ENTRE OTRAS COSAS: PONER LOS LAYOUTS DE LOS
-	 * PANELES Y AÑADIRLOS, AÑADIR LOS BOTONES Y LLAMAR AL MÉTODO
-	 * SETFEATURESBUTTON(),
-	 * 
-	 * AÑADIRLE LOS COLORES
+	 * Configura los layouts, colores y elementos gráficos de los paneles y botones.
+	 * Incluye ajustes como colores, tamaños y visibilidad.
 	 */
 	public void setSettings() {
 		this.frame.setSize(440, 520);
@@ -156,7 +154,7 @@ public class Engine extends JFrame implements ActionListener {
 		this.frame.setLocationRelativeTo(null);
 
 		this.contentPanel.setLayout(new BorderLayout());
-		
+
 		Color purpleBackground = new Color(75, 0, 130);
 		this.contentPanel.setBackground(purpleBackground);
 		this.topPanel.setBackground(purpleBackground);
@@ -222,6 +220,13 @@ public class Engine extends JFrame implements ActionListener {
 		theme();
 	}
 
+	/**
+	 * Configura las características de diseño de los botones según su tipo
+	 * (numérico o operador) y el tema activo (claro u oscuro).
+	 *
+	 * @param _button El botón a personalizar.
+	 * @param _type   Tipo de botón (REGULAR u OPERATOR).
+	 */
 	public void setFeaturesButton(JButton _button, ButtonType _type) {
 		// Persobalizacion para todos los botones
 		_button.setPreferredSize(new Dimension(80, 60));
@@ -294,7 +299,7 @@ public class Engine extends JFrame implements ActionListener {
 					}
 				}
 			});
-			
+
 			if (this.isOscuro == true) {
 				this.contentPanel.setBackground(Color.black);
 				this.topPanel.setBackground(Color.black);
@@ -318,10 +323,7 @@ public class Engine extends JFrame implements ActionListener {
 	}
 
 	/**
-	 * ESTE MÉTODO REGISTRA LOS ACTIONLISTENER PARA TODOS LOS BOTONES DE LA
-	 * APLICACIÓN. ES DECIR, PARA CADA BOTÓN, AÑADE UN ACTIONLISTENER() QUE RECIBE
-	 * COMO PARÁMETRO EL OBJETO THIS PARA PODER IDENTIFICAR EL OBJETO (BOTÓN) QUE SE
-	 * PULSA.
+	 * Registra los ActionListener para todos los botones de la calculadora.
 	 */
 	public void addActionEvent() {
 		JButton[] numberButtons = { n0, n1, n2, n3, n4, n5, n6, n7, n8, n9 };
@@ -342,11 +344,8 @@ public class Engine extends JFrame implements ActionListener {
 	}
 
 	/**
-	 * COMPRUEBA QUÉ OPERACIÓN SE DEBE REALIZAR. EN OTRAS PALABRAS: MIRA EL ESTADO
-	 * ACTUAL DEL ATRIBUTO THIS.OPERATION Y, EN FUNCIÓN DE ESE VALOR, LLEVA A CABO
-	 * UNA OPERACIÓN U OTRA (CON LOS ATRIBUTOS THIS.NUM1 Y THIS.NUM2, QUE
-	 * REPRESENTAN LOS DOS ÚNICOS OPERANDO QUE MANEJA NUESTRA CALCULADORA),
-	 * MODIFICANDO EL TRIBUTO THIS.RESULT Y ACTUALIZANDO EL TEXTO EN EL DISPLAY
+	 * Realiza la operación matemática correspondiente según el valor del atributo
+	 * `operation`. Actualiza el resultado y muestra el texto en el display.
 	 */
 	public void operation() {
 		switch (this.operation) {
@@ -373,11 +372,10 @@ public class Engine extends JFrame implements ActionListener {
 	}
 
 	/**
-	 * ESTE MÉTODO SE ENCARGA DE OBTENER LA INFORMACIÓN QUE HAYA EN EL DISPLAY
-	 * (NÚMEROS INTRODUCIDOS Y OPERACIÓN QUE SE DEBE REALIZAR) Y LLAMAR AL MÉTODO
-	 * OPERATION() PARA EJECUTAR DICHA OPERACIÓN.
-	 * 
-	 * @param e
+	 * Maneja los eventos de acción para los botones, como calcular resultados,
+	 * modificar el display o alternar entre modos de tema.
+	 *
+	 * @param e El evento de acción disparado.
 	 */
 	public void actionPerformed(ActionEvent e) {
 		// Recogemos el tipo de boton que se ha pulsado y su texto
@@ -453,6 +451,13 @@ public class Engine extends JFrame implements ActionListener {
 		}
 	}
 
+	/**
+     * Eleva el número más reciente en el display al exponente indicado.
+     *
+     * @param cadena   Cadena de texto actual en el display.
+     * @param elevador Exponente al que se elevará el número.
+     * @return Cadena actualizada con el resultado de la operación.
+     */
 	public String elevarNumero(String cadena, int elevador) {
 		if (cadena.isEmpty()) {
 			return "";
@@ -498,14 +503,29 @@ public class Engine extends JFrame implements ActionListener {
 		return cadena.substring(0, i + 1) + resultado;
 	}
 
+	 /**
+     * Calcula el cuadrado de un número.
+     *
+     * @param num Número a elevar al cuadrado.
+     * @return El cuadrado del número.
+     */
 	public int getSquare(int num) {
 		return num * num;
 	}
-
+	
+	/**
+     * Calcula el cubo de un número.
+     *
+     * @param num Número a elevar al cubo.
+     * @return El cubo del número.
+     */
 	public int getCubed(int num) {
 		return num * num * num;
 	}
 	
+	 /**
+     * Aplica el tema actual (claro u oscuro) a los botones y paneles de la calculadora.
+     */
 	public void theme() {
 		Pattern pButtonType = Pattern.compile("^\\d");
 
