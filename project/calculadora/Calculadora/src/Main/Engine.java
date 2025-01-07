@@ -1,5 +1,6 @@
 package Main;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -64,7 +65,7 @@ public class Engine extends JFrame implements ActionListener {
 	private JButton ln;
 
 	private boolean mathError;
-	private boolean isOscuro = true;
+	private boolean isOscuro;
 
 	// Tipos de boton
 	// Sirven solo para decorar
@@ -91,8 +92,8 @@ public class Engine extends JFrame implements ActionListener {
 		// Inizalizamos el JPanel
 		this.contentPanel = new JPanel();
 		this.displayPanel = new JPanel();
-		
-		//Panel extra
+
+		// Panel extra
 		this.topPanel = new JPanel();
 		// Los dos 4 indican la cantidad de filas, columnas y el primer 5 la separacion
 		// entre las columnas en horizontal y el otro la separacion en vertical
@@ -121,7 +122,7 @@ public class Engine extends JFrame implements ActionListener {
 		reset = new JButton("C");
 
 		// Botones extra
-		modoOscuro = new JButton("o");
+		modoOscuro = new JButton("🌙");
 		del = new JButton("DEL");
 		x2 = new JButton("^2");
 		x3 = new JButton("^3");
@@ -136,6 +137,7 @@ public class Engine extends JFrame implements ActionListener {
 		num2 = 0;
 		result = 0;
 		mathError = false;
+		isOscuro = false;
 
 		setSettings();
 		addActionEvent();
@@ -149,35 +151,39 @@ public class Engine extends JFrame implements ActionListener {
 	 * AÑADIRLE LOS COLORES
 	 */
 	public void setSettings() {
-		this.frame.setSize(600, 700);
+		this.frame.setSize(440, 520);
 		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.frame.setLocationRelativeTo(null);
+
+		this.contentPanel.setLayout(new BorderLayout());
 		
 		Color purpleBackground = new Color(75, 0, 130);
 		this.contentPanel.setBackground(purpleBackground);
-		this.contentPanel.setLayout(new FlowLayout());
+		this.topPanel.setBackground(purpleBackground);
 		this.displayPanel.setBackground(purpleBackground);
 		this.buttonPanel.setBackground(purpleBackground);
-		
+
+		this.topPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		this.modoOscuro.setPreferredSize(new Dimension(40, 40));
-		this.modoOscuro.setFont(new Font("Arial", Font.PLAIN, 11));
-		this.topPanel.add(modoOscuro);
-		this.contentPanel.add(topPanel);
+		this.modoOscuro.setBackground(Color.white);
+		this.modoOscuro.setBorder(new LineBorder(Color.black, 2, true));
+		this.topPanel.add(modoOscuro, BorderLayout.EAST);
+		this.contentPanel.add(topPanel, BorderLayout.NORTH);
 
 		this.display.setPreferredSize(new Dimension(420, 100));
 		this.display.setFont(new Font("Arial", Font.PLAIN, 40));
 		this.display.setHorizontalAlignment(JTextField.RIGHT);
 		this.display.setEditable(false);
 		this.displayPanel.add(this.display);
-		this.contentPanel.add(displayPanel);
-		
+		this.contentPanel.add(displayPanel, BorderLayout.CENTER);
+
 		// Fila 0 aniadida extra
 		this.buttonPanel.add(log);
 		this.buttonPanel.add(sin);
 		this.buttonPanel.add(cos);
 		this.buttonPanel.add(tan);
 		this.buttonPanel.add(ln);
-		
+
 		// Primera fila
 		this.buttonPanel.add(n7);
 		this.buttonPanel.add(n8);
@@ -207,24 +213,13 @@ public class Engine extends JFrame implements ActionListener {
 		this.buttonPanel.add(equal);
 
 		// Aniadirlo todo
-		this.contentPanel.add(this.buttonPanel);
+		this.contentPanel.add(this.buttonPanel, BorderLayout.SOUTH);
 
 		// Visibilidad
 		this.frame.add(this.contentPanel);
 		this.frame.setVisible(true);
 
-		Pattern pButtonType = Pattern.compile("^\\d");
-
-		for (int i = 0; i < buttonPanel.getComponentCount(); i++) {
-			JButton tempButton = (JButton) buttonPanel.getComponent(i);
-			Matcher mButtonType = pButtonType.matcher(tempButton.getText());
-
-			if (mButtonType.find()) {
-				this.setFeaturesButton(tempButton, ButtonType.REGULAR);
-			} else {
-				this.setFeaturesButton(tempButton, ButtonType.OPERATOR);
-			}
-		}
+		theme();
 	}
 
 	public void setFeaturesButton(JButton _button, ButtonType _type) {
@@ -233,44 +228,81 @@ public class Engine extends JFrame implements ActionListener {
 
 		Color purpleBackground = new Color(75, 0, 130);
 		Color pinkColor = new Color(255, 105, 180);
+		Color greenColor = new Color(27, 85, 48);
+		Color greenMore = new Color(2, 28, 19);
 
 		if (_type == ButtonType.OPERATOR) {
-			// Decoracion botones de operador
-			_button.setBackground(Color.WHITE);
-			_button.setForeground(purpleBackground);
 			_button.setFont(new Font("Arial", Font.BOLD, 20));
 
-			_button.setBorder(new LineBorder(pinkColor, 2, true));
+			// Decoracion botones de operador
+			if (isOscuro == false) {
+				_button.setBackground(Color.WHITE);
+				_button.setForeground(purpleBackground);
+				_button.setBorder(new LineBorder(pinkColor, 2, true));
+			} else {
+				_button.setBackground(greenMore);
+				_button.setForeground(Color.white);
+				_button.setBorder(new LineBorder(greenColor, 2, true));
+			}
 
 			// Efecto hover
 			_button.addMouseListener(new MouseAdapter() {
 				public void mouseEntered(MouseEvent e) {
-					_button.setBackground(new Color(240, 240, 240));
+					if (isOscuro == false) {
+						_button.setBackground(new Color(240, 240, 240));
+					} else {
+						_button.setBackground(new Color(0, 18, 9));
+					}
 				}
 
 				public void mouseExited(MouseEvent e) {
-					_button.setBackground(Color.WHITE);
+					if (isOscuro == false) {
+						_button.setBackground(Color.WHITE);
+					} else {
+						_button.setBackground(greenMore);
+					}
 				}
 			});
 
 		} else {
-			// Decoracion botones de digitos
-			_button.setBackground(pinkColor);
-			_button.setForeground(Color.WHITE); // Texto blanco
+			// Decoracion general
+			_button.setForeground(Color.WHITE);
 			_button.setFont(new Font("Arial", Font.PLAIN, 18));
-
 			_button.setBorder(new LineBorder(Color.white, 2, true));
+
+			if (this.isOscuro == false) {
+				_button.setBackground(pinkColor);
+			} else {
+				_button.setBackground(purpleBackground);
+			}
 
 			// Efecto hover
 			_button.addMouseListener(new MouseAdapter() {
 				public void mouseEntered(MouseEvent e) {
-					_button.setBackground(new Color(255, 182, 193));
+					if (isOscuro == false) {
+						_button.setBackground(new Color(255, 182, 193));
+					} else {
+						_button.setBackground(new Color(65, 0, 120));
+					}
 				}
 
 				public void mouseExited(MouseEvent e) {
-					_button.setBackground(pinkColor);
+					if (isOscuro == false) {
+						_button.setBackground(pinkColor);
+					} else {
+						_button.setBackground(purpleBackground);
+					}
 				}
 			});
+			
+			if (this.isOscuro == true) {
+				this.contentPanel.setBackground(Color.black);
+				this.topPanel.setBackground(Color.black);
+				this.displayPanel.setBackground(Color.black);
+				this.buttonPanel.setBackground(Color.black);
+				this.display.setBackground(Color.black);
+				this.display.setForeground(Color.white);
+			}
 		}
 
 		// Efecto de presionado para todos los botones
@@ -279,7 +311,7 @@ public class Engine extends JFrame implements ActionListener {
 				_button.setBackground(_button.getBackground().darker());
 			}
 
-			public void mouseReleased(java.awt.event.MouseEvent evt) {
+			public void mouseReleased(MouseEvent evt) {
 				_button.setBackground(_button.getBackground().brighter());
 			}
 		});
@@ -298,12 +330,15 @@ public class Engine extends JFrame implements ActionListener {
 			numbers.addActionListener(this);
 		}
 
-		JButton[] operatorButtons = { divide, multiply, subtract, add, equal, reset, del, x2, x3, ans , log, sin, cos, tan};
+		JButton[] operatorButtons = { divide, multiply, subtract, add, equal, reset, del, x2, x3, ans, log, sin, cos,
+				tan };
 
 		for (JButton operators : operatorButtons) {
 			operators.addActionListener(this);
 		}
 
+		JButton modoOscuro = this.modoOscuro;
+		modoOscuro.addActionListener(this);
 	}
 
 	/**
@@ -381,81 +416,108 @@ public class Engine extends JFrame implements ActionListener {
 				// TODO: handle exception
 				System.out.println("No se ha podido borrar ningun numero " + e2);
 			}
-			
+
 		} else if (input_text.equals("^2")) {
 			try {
-	            displayText = elevarNumero(displayText, 2);
-	            this.display.setText(displayText);
-	        } catch (Exception e2) {
-	            System.out.println("Error al elevar al cuadrado " + e2);
-	            this.mathError = true;
-	        }
+				displayText = elevarNumero(displayText, 2);
+				this.display.setText(displayText);
+			} catch (Exception e2) {
+				System.out.println("Error al elevar al cuadrado " + e2);
+				this.mathError = true;
+			}
 		} else if (input_text.equals("^3")) {
 			try {
-	            displayText = elevarNumero(displayText, 3);
-	            this.display.setText(displayText);
-	        } catch (Exception e2) {
-	            System.out.println("Error al elevar al cubo " + e2);
-	            this.mathError = true;
-	        }
-		}else if (input_text.equals("Ans")) {
+				displayText = elevarNumero(displayText, 3);
+				this.display.setText(displayText);
+			} catch (Exception e2) {
+				System.out.println("Error al elevar al cubo " + e2);
+				this.mathError = true;
+			}
+		} else if (input_text.equals("Ans")) {
 			this.display.setText(displayText + this.result);
-		}else {
+		} else if (input_text.equals("🌙") || input_text.equals("🌞")) {
+			if (this.isOscuro == true) { // En caso de que sea modo oscuro
+				this.isOscuro = false;
+				this.modoOscuro.setText("🌙");
+				theme();
+			} else { // En caso de que no sea modo oscuro
+				this.isOscuro = true;
+				this.modoOscuro.setText("🌞");
+				theme();
+			}
+		} else {
 			if (!this.mathError) {
 				this.display.setText(displayText + input_text);
 			}
 
 		}
 	}
-	
+
 	public String elevarNumero(String cadena, int elevador) {
 		if (cadena.isEmpty()) {
-	        return "";
-	    }
-		
+			return "";
+		}
+
 		StringBuilder numero = new StringBuilder();
-	    int i = cadena.length() - 1;
-	    boolean encontradoNumero = false;
-	    
-	    while (i >= 0) {
-	        char c = cadena.charAt(i);
-	        if (Character.isDigit(c)) {
-	        	// Insert en la posicion 0 la C
-	            numero.insert(0, c);
-	            encontradoNumero = true;
-	            // Comprueba si C vale -, en caso de que valga menos comprueba que si i esta en la posicion 0 y si antes del - no hay otro caracter, manejo de numeros negativos --
-	        } else if (c == '-' && i > 0 && !Character.isDigit(cadena.charAt(i-1))) {
-	            numero.insert(0, c);
-	            System.out.println(numero.toString());
-	            break;
-	        } else if (encontradoNumero) {
-	            break;
-	        }
-	        i--;
-	    }
-	    
-	    // safety check
-	    if (numero.length() == 0) {
-	        return cadena;
-	    }
+		int i = cadena.length() - 1;
+		boolean encontradoNumero = false;
 
-	    int num = Integer.parseInt(numero.toString());
-	    int resultado = 0;
-	    
-	    if (elevador == 2) {
-	    	resultado = getSquare(num);
-	    }else {
-	    	resultado = getCubed(num);
-	    }
+		while (i >= 0) {
+			char c = cadena.charAt(i);
+			if (Character.isDigit(c)) {
+				// Insert en la posicion 0 la C
+				numero.insert(0, c);
+				encontradoNumero = true;
+				// Comprueba si C vale -, en caso de que valga menos comprueba que si i esta en
+				// la posicion 0 y si antes del - no hay otro caracter, manejo de numeros
+				// negativos --
+			} else if (c == '-' && i > 0 && !Character.isDigit(cadena.charAt(i - 1))) {
+				numero.insert(0, c);
+				System.out.println(numero.toString());
+				break;
+			} else if (encontradoNumero) {
+				break;
+			}
+			i--;
+		}
 
-	    return cadena.substring(0, i + 1) + resultado;
+		// safety check
+		if (numero.length() == 0) {
+			return cadena;
+		}
+
+		int num = Integer.parseInt(numero.toString());
+		int resultado = 0;
+
+		if (elevador == 2) {
+			resultado = getSquare(num);
+		} else {
+			resultado = getCubed(num);
+		}
+
+		return cadena.substring(0, i + 1) + resultado;
 	}
-	
+
 	public int getSquare(int num) {
 		return num * num;
 	}
-	
+
 	public int getCubed(int num) {
 		return num * num * num;
+	}
+	
+	public void theme() {
+		Pattern pButtonType = Pattern.compile("^\\d");
+
+		for (int i = 0; i < buttonPanel.getComponentCount(); i++) {
+			JButton tempButton = (JButton) buttonPanel.getComponent(i);
+			Matcher mButtonType = pButtonType.matcher(tempButton.getText());
+
+			if (mButtonType.find()) {
+				this.setFeaturesButton(tempButton, ButtonType.REGULAR);
+			} else {
+				this.setFeaturesButton(tempButton, ButtonType.OPERATOR);
+			}
+		}
 	}
 }
