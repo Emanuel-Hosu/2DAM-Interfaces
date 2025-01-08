@@ -6,6 +6,7 @@ Este repositorio contiene todos los proyectos desarrollados en la asignatura de 
 
 ## 🎯 Contenido del Repositorio
 
+- **Ejercicios**: Ejercicios básicos de Swing realizados en clase.
 - **Calculadora**: Una calculadora moderna con soporte para modo claro y modo oscuro. Diseñada con Java y Swing.
   
 ---
