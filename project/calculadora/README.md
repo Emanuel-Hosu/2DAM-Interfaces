@@ -28,10 +28,10 @@ El proyecto fue desarrollado utilizando:
 ## 🗃️ Capturas de Pantalla
 
 ### Modo Claro
-![Modo Claro](ruta/a/la/imagen-modo-claro.png)
+![Modo Claro]([ruta/a/la/imagen-modo-claro.png](https://github.com/Emanuel-Hosu/2DAM-Interfaces/blob/main/project/calculadora/img_calculadora/modo_claro.png))
 
 ### Modo Oscuro
-![Modo Oscuro](ruta/a/la/imagen-modo-oscuro.png)
+![Modo Oscuro]([ruta/a/la/imagen-modo-oscuro.png](https://github.com/Emanuel-Hosu/2DAM-Interfaces/blob/main/project/calculadora/img_calculadora/modo_oscuro.png))
 
 ---
 
