@@ -387,6 +387,42 @@ public class Engine extends JFrame implements ActionListener {
 
 		if (input_text.equals("=") && !this.mathError) {
 			ArrayList<String> digits = new ArrayList<String>();
+			/* 
+			 * Explicación de la expresión regular utilizada en este fragmento de código:
+			 * 
+			 * ((?<=^|[^\\d])-?\\d+(?=$|[^\\d])|[+\\-*\\/()])
+			 * 
+			 * La expresión está dividida en dos partes principales, separadas por el operador OR (|):
+			 * 
+			 * Primera parte: (?<=^|[^\\d])-?\\d+(?=$|[^\\d])
+			 * ------------------------------------------------
+			 * - (?<=^|[^\\d]): Lookbehind positivo que verifica que antes del número haya:
+			 *   * El inicio de la cadena (^), o
+			 *   * Un carácter que no sea un dígito ([^\\d]).
+			 * - -?: Permite opcionalmente un signo negativo (-) antes del número.
+			 * - \\d+: Coincide con uno o más dígitos consecutivos (0-9).
+			 * - (?=$|[^\\d]): Lookahead positivo que verifica que después del número haya:
+			 *   * El final de la cadena ($), o
+			 *   * Un carácter que no sea un dígito ([^\\d]).
+			 * 
+			 * Esta parte se encarga de capturar números enteros (positivos o negativos), asegurándose 
+			 * de que están aislados y no forman parte de una secuencia de caracteres no numéricos.
+			 * 
+			 * Segunda parte: [+\\-*\\/()]
+			 * ----------------------------
+			 * - [ ... ]: Representa un conjunto de caracteres.
+			 * - +: Coincide con el operador de suma.
+			 * - \\-: Coincide con el operador de resta (el guion está escapado para evitar ambigüedades).
+			 * - *: Coincide con el operador de multiplicación.
+			 * - \\/: Coincide con el operador de división (el slash está escapado con \\).
+			 * - (): Coincide con paréntesis de apertura y cierre.
+			 * 
+			 * Esta parte captura operadores matemáticos (+, -, *, /) y paréntesis.
+			 * 
+			 * En conjunto, la expresión regular identifica y separa los números, operadores matemáticos
+			 * y paréntesis presentes en la cadena de entrada. Esto permite analizar y procesar una 
+			 * expresión matemática de manera eficiente.
+			 */
 			Pattern pDigit = Pattern.compile("((?<=^|[^\\d])-?\\d+(?=$|[^\\d])|[+\\-*\\/()])");
 			Matcher mDigit = pDigit.matcher(displayText);
 
@@ -422,6 +458,7 @@ public class Engine extends JFrame implements ActionListener {
 				this.display.setText(displayText);
 			} catch (Exception e2) {
 				System.out.println("Error al elevar al cuadrado " + e2);
+				this.display.setText("Syntax ERROR");
 				this.mathError = true;
 			}
 		} else if (input_text.equals("^3")) {
