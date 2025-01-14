@@ -14,10 +14,13 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 
 /**
@@ -66,6 +69,10 @@ public class Engine extends JFrame implements ActionListener {
 	private JButton cos;
 	private JButton tan;
 	private JButton ln;
+	
+	//Botones segunda version
+	private JLabel marca;
+	private JLabel modo;
 
 	private boolean mathError;
 	private boolean isOscuro;
@@ -133,6 +140,10 @@ public class Engine extends JFrame implements ActionListener {
 		cos = new JButton("cos");
 		tan = new JButton("tan");
 		ln = new JButton("ln");
+		
+		// Botones segunda version
+		marca = new JLabel("Emios", SwingConstants.CENTER);
+		modo = new JLabel("Base: Decimal");
 
 		num1 = 0;
 		num2 = 0;
@@ -154,14 +165,28 @@ public class Engine extends JFrame implements ActionListener {
 		this.frame.setLocationRelativeTo(null);
 
 		this.contentPanel.setLayout(new BorderLayout());
-
-		this.topPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+		this.topPanel.setLayout(new BorderLayout());
+		
+		//Modo oscuro
 		this.modoOscuro.setPreferredSize(new Dimension(40, 40));
 		this.modoOscuro.setBackground(Color.white);
 		this.modoOscuro.setBorder(new LineBorder(Color.black, 2, true));
+		
+		//Marca
+		this.marca.setHorizontalAlignment(SwingConstants.CENTER);
+		this.marca.setForeground(Color.black);
+		this.marca.setOpaque(true);
+		this.marca.setBackground(Color.WHITE);
+		this.marca.setBorder(BorderFactory.createLineBorder(Color.pink, 2));
+	
+		
+		//Top Panel
+		this.topPanel.add(modo, BorderLayout.WEST);
+		this.topPanel.add(marca, BorderLayout.CENTER);
 		this.topPanel.add(modoOscuro, BorderLayout.EAST);
 		this.contentPanel.add(topPanel, BorderLayout.NORTH);
-
+		
+		//Display
 		this.display.setPreferredSize(new Dimension(420, 100));
 		this.display.setFont(new Font("Arial", Font.PLAIN, 40));
 		this.display.setHorizontalAlignment(JTextField.RIGHT);
