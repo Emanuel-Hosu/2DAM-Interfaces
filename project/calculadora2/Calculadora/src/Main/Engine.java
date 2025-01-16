@@ -2,6 +2,7 @@ package Main;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -10,7 +11,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.net.Inet4Address;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -523,7 +526,7 @@ public class Engine extends JFrame implements ActionListener {
 			hex.addActionListener(this);
 		}
 		
-		JButton[] ownerInfo = { info, owner};
+		JButton[] ownerInfo = { info, owner, marca};
 		
 		for (JButton owner: ownerInfo) {
 			owner.addActionListener(this);
@@ -635,9 +638,7 @@ public class Engine extends JFrame implements ActionListener {
 					this.num2 = Integer.parseInt(digits.get(2));
 				}else {
 					this.num1 = Integer.parseInt(digits.get(0), 16);
-					System.out.println("Num1 " + Integer.parseInt(digits.get(0), 16));
 					this.num2 = Integer.parseInt(digits.get(2), 16);
-					System.out.println("Num2: " + Integer.parseInt(digits.get(2), 16));
 				}
 				
 
@@ -649,6 +650,19 @@ public class Engine extends JFrame implements ActionListener {
 		}else if (input_text.equals("B2")) {
 			this.modo.setText("Base: Binario");
 			this.baseNum = 2;
+		}else if (input_text.equals("Emios")) {
+			//Desktop support
+			if (Desktop.isDesktopSupported()) {
+			    Desktop desktop = Desktop.getDesktop();
+			    try {
+			        desktop.browse(new URI("https://github.com/Emanuel-Hosu"));
+			    } catch (IOException eve) {
+			    	System.out.println("Se ha producido un a la hora de abrir la url " + eve);
+			        eve.printStackTrace();
+			    } catch (URISyntaxException ev) {
+			    	System.out.println("Se ha producido un a la hora de abrir la url " + ev);
+			    }
+			}
 		}else if (input_text.equals("B8")) {
 			this.modo.setText("Base: Octal");
 			this.baseNum = 8;
