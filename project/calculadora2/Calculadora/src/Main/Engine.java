@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.net.Inet4Address;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -58,6 +59,7 @@ public class Engine extends JFrame implements ActionListener {
 	private JButton add;
 	private JButton equal;
 	private JButton reset;
+	
 	// Botones extra
 	private JButton modoOscuro;
 	private JButton del;
@@ -88,6 +90,7 @@ public class Engine extends JFrame implements ActionListener {
 
 	private boolean mathError;
 	private boolean isOscuro;
+	private int baseNum;
 
 	// Tipos de boton
 	// Sirven solo para decorar
@@ -97,6 +100,7 @@ public class Engine extends JFrame implements ActionListener {
 
 	// Almacenar temporalmente ciertos valores
 	private int num1, num2, result;
+	private String hexResult;
 	private char operation;
 
 	/**
@@ -167,7 +171,9 @@ public class Engine extends JFrame implements ActionListener {
 		a = new JButton("A");
 		b = new JButton("B");
 		c = new JButton("C");
-
+		baseNum = 10;
+		hexResult = "0";
+		
 		num1 = 0;
 		num2 = 0;
 		result = 0;
@@ -298,7 +304,7 @@ public class Engine extends JFrame implements ActionListener {
 		Color pinkColor = new Color(255, 105, 180);
 		Color greenColor = new Color(27, 85, 48);
 		Color greenMore = new Color(2, 28, 19);
-		Color orangeColor = new Color(255,203,30);
+		Color orangeColor = new Color(255, 203, 30);
 		Color brownColor = new Color(176, 86, 8);
 		Color lightBrownColor = new Color(255, 175, 104);
 		Color salmonColor = new Color(255, 169, 125);
@@ -336,7 +342,7 @@ public class Engine extends JFrame implements ActionListener {
 				}
 			});
 
-		} else if (_type == ButtonType.REGULAR){
+		} else if (_type == ButtonType.REGULAR) {
 			// Decoracion general
 			_button.setForeground(Color.WHITE);
 			_button.setFont(new Font("Arial", Font.PLAIN, 18));
@@ -367,20 +373,94 @@ public class Engine extends JFrame implements ActionListener {
 				}
 			});
 
-		}else if (_type == ButtonType.HEX_DIGITS) {
+		} else if (_type == ButtonType.HEX_DIGITS) {
 			_button.setFont(new Font("Arial", Font.BOLD, 20));
 			_button.setBorder(new LineBorder(Color.yellow, 2, true));
-			_button.setBackground(orangeColor);
 			_button.setForeground(Color.WHITE);
-			
-		}else if (_type == ButtonType.BASE) {
+
+			if (this.isOscuro == false) {
+				_button.setBackground(orangeColor);
+			} else {
+				_button.setBackground(new Color(190, 200, 10));
+			}
+
+			// Efecto hover
+			_button.addMouseListener(new MouseAdapter() {
+				public void mouseEntered(MouseEvent e) {
+					if (isOscuro == false) {
+						_button.setBackground(new Color(245, 193, 20));
+					} else {
+						_button.setBackground(new Color(180, 190, 0));
+					}
+				}
+
+				public void mouseExited(MouseEvent e) {
+					if (isOscuro == false) {
+						_button.setBackground(orangeColor);
+					} else {
+						_button.setBackground(new Color(190, 200, 10));
+					}
+				}
+			});
+
+		} else if (_type == ButtonType.BASE) {
 			_button.setFont(new Font("Arial", Font.BOLD, 20));
 			_button.setBorder(new LineBorder(lightBrownColor, 2, true));
-			_button.setBackground(brownColor);
 			_button.setForeground(Color.WHITE);
-		}else {
+
+			if (this.isOscuro == false) {
+				_button.setBackground(brownColor);
+			} else {
+				_button.setBackground(new Color(146, 46, 80));
+			}
+
+			// Efecto hover
+			_button.addMouseListener(new MouseAdapter() {
+				public void mouseEntered(MouseEvent e) {
+					if (isOscuro == false) {
+						_button.setBackground(new Color(166, 76, 0));
+					} else {
+						_button.setBackground(new Color(136, 36, 70));
+					}
+				}
+
+				public void mouseExited(MouseEvent e) {
+					if (isOscuro == false) {
+						_button.setBackground(brownColor);
+					} else {
+						_button.setBackground(new Color(146, 46, 80));
+					}
+				}
+			});
+		} else {
+			_button.setForeground(Color.WHITE);
+			_button.setBorder(new LineBorder(Color.white, 2, true));
 			_button.setFont(new Font("Arial", Font.BOLD, 20));
-			_button.setBackground(salmonColor);
+
+			if (this.isOscuro == false) {
+				_button.setBackground(salmonColor);
+			} else {
+				_button.setBackground(new Color(205, 109, 75));
+			}
+			
+			// Efecto hover
+			_button.addMouseListener(new MouseAdapter() {
+				public void mouseEntered(MouseEvent e) {
+					if (isOscuro == false) {
+						_button.setBackground(new Color(245, 159, 115));
+					} else {
+						_button.setBackground(new Color(195, 99, 65));
+					}
+				}
+
+				public void mouseExited(MouseEvent e) {
+					if (isOscuro == false) {
+						_button.setBackground(salmonColor);
+					} else {
+						_button.setBackground(new Color(205, 109, 75));
+					}
+				}
+			});
 		}
 
 		if (this.isOscuro == true) {
@@ -430,6 +510,24 @@ public class Engine extends JFrame implements ActionListener {
 
 		JButton modoOscuro = this.modoOscuro;
 		modoOscuro.addActionListener(this);
+		
+		JButton[] bases = { b2, b8, b10, b16};
+		
+		for (JButton base : bases) {
+			base.addActionListener(this);
+		}
+		
+		JButton[] hexDecimals = { d, e, f, a, b, c};
+		
+		for (JButton hex: hexDecimals) {
+			hex.addActionListener(this);
+		}
+		
+		JButton[] ownerInfo = { info, owner};
+		
+		for (JButton owner: ownerInfo) {
+			owner.addActionListener(this);
+		}
 	}
 
 	/**
@@ -439,13 +537,13 @@ public class Engine extends JFrame implements ActionListener {
 	public void operation() {
 		switch (this.operation) {
 		case '+':
-			this.result = this.num1 + this.num2;
+			getBaseResult(this.num1, this.num2, "+");
 			break;
 		case '-':
-			this.result = this.num1 - this.num2;
+			getBaseResult(this.num1, this.num2, "-");
 			break;
 		case '*':
-			this.result = this.num1 * this.num2;
+			getBaseResult(this.num1, this.num2, "*");
 			break;
 		case '/':
 			if (this.num2 == 0) {
@@ -453,11 +551,43 @@ public class Engine extends JFrame implements ActionListener {
 				this.mathError = true;
 				return;
 			}
-			this.result = this.num1 / this.num2;
+		
+			getBaseResult(this.num1, this.num2, "/");
 			break;
 		}
-
-		this.display.setText(Integer.toString(this.result));
+		
+		if (baseNum != 16) {
+			this.display.setText(Integer.toString(this.result));			
+		}else {
+			this.display.setText(this.hexResult);	
+		}
+	}
+	
+	public void getBaseResult(int _num1, int _num2, String operador) {
+		int tempResult = 0;
+		
+		if(operador == "+") {
+			tempResult = _num1 + _num2;			
+		}else if (operador == "-") {
+			tempResult = _num1 - _num2;
+		}else if (operador == "*") {
+			tempResult = _num1 * _num2;
+		}else if (operador == "/") {
+			tempResult = _num1 / _num2;
+		}
+		
+		// https://www.geeksforgeeks.org/java-program-to-add-two-binary-strings/
+		if (baseNum == 10) {
+			this.result = tempResult;
+		}else if (baseNum == 2) {
+			this.result = Integer.parseInt(Integer.toBinaryString(tempResult)); 			
+		}else if (baseNum == 8) {
+			this.result = Integer.parseInt(Integer.toOctalString(tempResult)); 			
+		}else if (baseNum == 16) {
+			this.hexResult = Integer.toHexString(tempResult).toUpperCase(); 			
+		}else {
+			this.mathError = true;
+		}
 	}
 
 	/**
@@ -471,62 +601,64 @@ public class Engine extends JFrame implements ActionListener {
 		Object source = e.getSource();
 		String input_text = e.getActionCommand();
 		String displayText = this.display.getText();
+		String regExp = "";
 		// System.out.println("Se ha pulsado " + input_text);
 
 		if (input_text.equals("=") && !this.mathError) {
 			ArrayList<String> digits = new ArrayList<String>();
-			/*
-			 * Explicación de la expresión regular utilizada en este fragmento de código:
-			 * 
-			 * ((?<=^|[^\\d])-?\\d+(?=$|[^\\d])|[+\\-*\\/()])
-			 * 
-			 * La expresión está dividida en dos partes principales, separadas por el
-			 * operador OR (|):
-			 * 
-			 * Primera parte: (?<=^|[^\\d])-?\\d+(?=$|[^\\d])
-			 * ------------------------------------------------ - (?<=^|[^\\d]): Lookbehind
-			 * positivo que verifica que antes del número haya: * El inicio de la cadena
-			 * (^), o * Un carácter que no sea un dígito ([^\\d]). - -?: Permite
-			 * opcionalmente un signo negativo (-) antes del número. - \\d+: Coincide con
-			 * uno o más dígitos consecutivos (0-9). - (?=$|[^\\d]): Lookahead positivo que
-			 * verifica que después del número haya: * El final de la cadena ($), o * Un
-			 * carácter que no sea un dígito ([^\\d]).
-			 * 
-			 * Esta parte se encarga de capturar números enteros (positivos o negativos),
-			 * asegurándose de que están aislados y no forman parte de una secuencia de
-			 * caracteres no numéricos.
-			 * 
-			 * Segunda parte: [+\\-*\\/()] ---------------------------- - [ ... ]:
-			 * Representa un conjunto de caracteres. - +: Coincide con el operador de suma.
-			 * - \\-: Coincide con el operador de resta (el guion está escapado para evitar
-			 * ambigüedades). - *: Coincide con el operador de multiplicación. - \\/:
-			 * Coincide con el operador de división (el slash está escapado con \\). - ():
-			 * Coincide con paréntesis de apertura y cierre.
-			 * 
-			 * Esta parte captura operadores matemáticos (+, -, *, /) y paréntesis.
-			 * 
-			 * En conjunto, la expresión regular identifica y separa los números, operadores
-			 * matemáticos y paréntesis presentes en la cadena de entrada. Esto permite
-			 * analizar y procesar una expresión matemática de manera eficiente.
-			 */
-			Pattern pDigit = Pattern.compile("((?<=^|[^\\d])-?\\d+(?=$|[^\\d])|[+\\-*\\/()])");
+			
+			// Cuando la base es decimal
+			if (baseNum == 10) {
+				regExp = "((?<=^|[^\\d])-?\\d+(?=$|[^\\d])|[+\\-*\\/()])";
+			}else if (baseNum == 2) { // Cuando la base esta en binario
+				regExp = "((?<=^|[^01])-?[01]+(?=$|[^01])|[+\\-*\\/()])";
+			}else if (baseNum == 8) {
+				regExp = "((?<=^|[^0-7])-?[0-7]+(?=$|[^0-7])|[+\\-*\\/()])";
+			}else if (baseNum == 16) {
+				regExp = "((?<=^|[^0-9a-fA-F])-?[0-9a-fA-F]+(?=$|[^0-9a-fA-F])|[+\\-*\\/()])";
+			}else {
+				this.mathError = true;
+			}
+			
+			Pattern pDigit = Pattern.compile(regExp);
 			Matcher mDigit = pDigit.matcher(displayText);
 
 			while (mDigit.find()) {
 				digits.add(mDigit.group(0));
 			}
-
+			
 			try {
 				this.operation = digits.get(1).charAt(0);
-				this.num1 = Integer.parseInt(digits.get(0));
-				this.num2 = Integer.parseInt(digits.get(2));
+				
+				if (baseNum != 16) {
+					this.num1 = Integer.parseInt(digits.get(0));
+					this.num2 = Integer.parseInt(digits.get(2));
+				}else {
+					this.num1 = Integer.parseInt(digits.get(0), 16);
+					System.out.println("Num1 " + Integer.parseInt(digits.get(0), 16));
+					this.num2 = Integer.parseInt(digits.get(2), 16);
+					System.out.println("Num2: " + Integer.parseInt(digits.get(2), 16));
+				}
+				
 
 				operation();
 			} catch (Exception e2) {
 				System.out.println("Faltan parametros " + e2);
 				this.mathError = true;
 			}
-		} else if (input_text.equals("C")) {
+		}else if (input_text.equals("B2")) {
+			this.modo.setText("Base: Binario");
+			this.baseNum = 2;
+		}else if (input_text.equals("B8")) {
+			this.modo.setText("Base: Octal");
+			this.baseNum = 8;
+		} else if (input_text.equals("B10")) {
+			this.modo.setText("Base: Decimal");
+			this.baseNum = 10;
+		}else if (input_text.equals("B16")) {
+			this.modo.setText("Base: Hexadecimal");
+			this.baseNum = 16;
+		}else if (input_text.equals("Ce")) {
 			this.display.setText("");
 			this.mathError = false;
 		} else if (input_text.equals("DEL")) {
@@ -655,7 +787,7 @@ public class Engine extends JFrame implements ActionListener {
 		Pattern pButtonType = Pattern.compile("^\\d");
 		Pattern pHexDigit = Pattern.compile("^[A-F]$");
 		Pattern pBaseType = Pattern.compile("^B\\d+$");
-
+		
 		for (int i = 0; i < buttonPanel.getComponentCount(); i++) {
 			JButton tempButton = (JButton) buttonPanel.getComponent(i);
 			Matcher mButtonType = pButtonType.matcher(tempButton.getText());
@@ -669,11 +801,14 @@ public class Engine extends JFrame implements ActionListener {
 				Matcher mBaseType = pBaseType.matcher(tempButton.getText());
 				if (mHexDigit.find()) {
 					this.setFeaturesButton(tempButton, ButtonType.HEX_DIGITS);
-				}else if (mBaseType.find()) {
+				} else if (mBaseType.find()) {
 					this.setFeaturesButton(tempButton, ButtonType.BASE);
+				} else if (tempButton.getText().length() >= 4) {
+					this.setFeaturesButton(tempButton, ButtonType.OWNER);
 				}
 			}
 		}
 
 	}
+
 }
