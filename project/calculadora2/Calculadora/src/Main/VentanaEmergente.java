@@ -6,7 +6,6 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 
 public class VentanaEmergente extends JFrame {
 
@@ -44,12 +43,11 @@ public class VentanaEmergente extends JFrame {
 		this.frame.setVisible(true);
 
 		if (this.frameType.equals("Owner")) {
-			this.information.setText("<html>¡Hola! Soy Emi, el genio detrás de esta calculadora. 😎<br>"
-					+ "Me gusta programar, hacer clics random y convencer a Java de que no se cuelgue.<br>"
-					+ "Si algo salió mal... ¡no es mi culpa, fue culpa del compilador! 🙃<br>"
-					+ "¡Gracias por usar mi calculadora y no hacer matemáticas a mano como en la prehistoria!✨</html>");
+			this.information.setText("<html><h1>¡Hola! Soy Emi, el genio detrás de esta calculadora.</h1><br>"
+					+ "&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp Espero que te guste :) <br>"
+					+ "&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp Para contactar conmigo:</html>");
 		} else if (frameType.equals("Project")) {
-			this.information.setText("<html>¡Bienvenid@ al proyecto de Interfaces de DAM! 🎉<br>"
+			this.information.setText("<html>¡Bienvenid@ al proyecto de Interfaces de DAM!<br>"
 					+ "Esta no es una calculadora cualquiera... ¡es una 'todopoderosa'! 😎<br>"
 					+ "Suma, resta, multiplica, divide y posiblemente hasta hace café ☕ (en desarrollo).<br>"
 					+ "También soporta varias bases. Échale un ojo; si algo parece raro, es porque el profe lo pidió así <br>"
