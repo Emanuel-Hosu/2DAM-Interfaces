@@ -45,16 +45,16 @@ Para ejecutar esta calculadora, necesitarás:
 A continuación se muestran ejemplos de las distintas vistas de la calculadora. **(Recuerda añadir las imágenes en la carpeta del repositorio y actualiza los enlaces a continuación).**
 
 ### Modo Claro
-![Modo Claro](ruta/a/la/imagen/modo_claro.png)
+![Modo Claro](https://github.com/Emanuel-Hosu/2DAM-Interfaces/blob/main/project/calculadora2/img-Calculadora2/claro1.png)
 
 ### Modo Oscuro
-![Modo Oscuro](ruta/a/la/imagen/modo_oscuro.png)
+![Modo Oscuro](https://github.com/Emanuel-Hosu/2DAM-Interfaces/blob/main/project/calculadora2/img-Calculadora2/oscuro1.png)
 
 ### Ventana Owner
-![Ventana Owner](ruta/a/la/imagen/ventana_owner.png)
+![Ventana Owner](https://github.com/Emanuel-Hosu/2DAM-Interfaces/blob/main/project/calculadora2/img-Calculadora2/owner.png)
 
 ### Ventana Info
-![Ventana Info](ruta/a/la/imagen/ventana_info.png)
+![Ventana Info](https://github.com/Emanuel-Hosu/2DAM-Interfaces/blob/main/project/calculadora2/img-Calculadora2/info.png)
 
 ---
 
