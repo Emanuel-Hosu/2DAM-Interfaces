@@ -27,9 +27,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 
-
 // Expresion regular para saber si hay algun numero NO seguido de otro simbolo :///////// ^(?!.*[+\-*/]).*\d.*$
-
 
 /**
  * Clase Engine que implementa una calculadora con funcionalidad básica y
@@ -66,7 +64,7 @@ public class Engine extends JFrame implements ActionListener {
 	private JButton add;
 	private JButton equal;
 	private JButton reset;
-	
+
 	// Botones extra
 	private JButton modoOscuro;
 	private JButton del;
@@ -180,7 +178,7 @@ public class Engine extends JFrame implements ActionListener {
 		c = new JButton("C");
 		baseNum = 10;
 		hexResult = "0";
-		
+
 		num1 = 0;
 		num2 = 0;
 		result = 0;
@@ -449,7 +447,7 @@ public class Engine extends JFrame implements ActionListener {
 			} else {
 				_button.setBackground(new Color(205, 109, 75));
 			}
-			
+
 			// Efecto hover
 			_button.addMouseListener(new MouseAdapter() {
 				public void mouseEntered(MouseEvent e) {
@@ -517,22 +515,22 @@ public class Engine extends JFrame implements ActionListener {
 
 		JButton modoOscuro = this.modoOscuro;
 		modoOscuro.addActionListener(this);
-		
-		JButton[] bases = { b2, b8, b10, b16};
-		
+
+		JButton[] bases = { b2, b8, b10, b16 };
+
 		for (JButton base : bases) {
 			base.addActionListener(this);
 		}
-		
-		JButton[] hexDecimals = { d, e, f, a, b, c};
-		
-		for (JButton hex: hexDecimals) {
+
+		JButton[] hexDecimals = { d, e, f, a, b, c };
+
+		for (JButton hex : hexDecimals) {
 			hex.addActionListener(this);
 		}
-		
-		JButton[] ownerInfo = { info, owner, marca};
-		
-		for (JButton owner: ownerInfo) {
+
+		JButton[] ownerInfo = { info, owner, marca };
+
+		for (JButton owner : ownerInfo) {
 			owner.addActionListener(this);
 		}
 	}
@@ -558,41 +556,41 @@ public class Engine extends JFrame implements ActionListener {
 				this.mathError = true;
 				return;
 			}
-		
+
 			getBaseResult(this.num1, this.num2, "/");
 			break;
 		}
-		
+
 		if (baseNum != 16) {
-			this.display.setText(Integer.toString(this.result));			
-		}else {
-			this.display.setText(this.hexResult);	
+			this.display.setText(Integer.toString(this.result));
+		} else {
+			this.display.setText(this.hexResult);
 		}
 	}
-	
+
 	public void getBaseResult(int _num1, int _num2, String operador) {
 		int tempResult = 0;
-		
-		if(operador == "+") {
-			tempResult = _num1 + _num2;			
-		}else if (operador == "-") {
+
+		if (operador == "+") {
+			tempResult = _num1 + _num2;
+		} else if (operador == "-") {
 			tempResult = _num1 - _num2;
-		}else if (operador == "*") {
+		} else if (operador == "*") {
 			tempResult = _num1 * _num2;
-		}else if (operador == "/") {
+		} else if (operador == "/") {
 			tempResult = _num1 / _num2;
 		}
-		
+
 		// https://www.geeksforgeeks.org/java-program-to-add-two-binary-strings/
 		if (baseNum == 10) {
 			this.result = tempResult;
-		}else if (baseNum == 2) {
+		} else if (baseNum == 2) {
 			this.result = Integer.parseInt(Integer.toBinaryString(_num1 + _num2));
-		}else if (baseNum == 8) {
-			this.result = Integer.parseInt(Integer.toOctalString(tempResult)); 			
-		}else if (baseNum == 16) {
-			this.hexResult = Integer.toHexString(tempResult).toUpperCase(); 			
-		}else {
+		} else if (baseNum == 8) {
+			this.result = Integer.parseInt(Integer.toOctalString(tempResult));
+		} else if (baseNum == 16) {
+			this.hexResult = Integer.toHexString(tempResult).toUpperCase();
+		} else {
 			this.mathError = true;
 		}
 	}
@@ -614,78 +612,73 @@ public class Engine extends JFrame implements ActionListener {
 
 		if (input_text.equals("=") && !this.mathError) {
 			ArrayList<String> digits = new ArrayList<String>();
-			
+
 			// Cuando la base es decimal
 			if (baseNum == 10) {
 				regExp = "((?<=^|[^\\d])-?\\d+(?=$|[^\\d])|[+\\-*\\/()])";
-			}else if (baseNum == 2) { // Cuando la base esta en binario
+			} else if (baseNum == 2) { // Cuando la base esta en binario
 				regExp = "((?<=^|[^01])-?[01]+(?=$|[^01])|[+\\-*\\/()])";
-			}else if (baseNum == 8) { // En caso de que sea octañ
+			} else if (baseNum == 8) { // En caso de que sea octañ
 				regExp = "((?<=^|[^0-7])-?[0-7]+(?=$|[^0-7])|[+\\-*\\/()])";
-			}else if (baseNum == 16) { // En caso de que sea hexadeciml
+			} else if (baseNum == 16) { // En caso de que sea hexadeciml
 				regExp = "((?<=^|[^0-9a-fA-F])-?[0-9a-fA-F]+(?=$|[^0-9a-fA-F])|[+\\-*\\/()])";
-			}else { // En caso de que no sea ninguna
+			} else { // En caso de que no sea ninguna
 				this.mathError = true;
 			}
-			
+
 			Pattern pDigit = Pattern.compile(regExp);
 			Matcher mDigit = pDigit.matcher(displayText);
 
 			while (mDigit.find()) {
 				digits.add(mDigit.group(0));
 			}
-			
+
 			try {
 				this.operation = digits.get(1).charAt(0);
-				
+
 				if (baseNum == 10) {
 					this.num1 = Integer.parseInt(digits.get(0));
 					this.num2 = Integer.parseInt(digits.get(2));
-				}else if(baseNum == 2){
+				} else if (baseNum == 2) {
 					this.num1 = Integer.parseInt(digits.get(0), 2);
 					this.num2 = Integer.parseInt(digits.get(2), 2);
-				}else if(baseNum == 8){
+				} else if (baseNum == 8) {
 					this.num1 = Integer.parseInt(digits.get(0), 8);
 					this.num2 = Integer.parseInt(digits.get(2), 8);
-				}else {
+				} else {
 					this.num1 = Integer.parseInt(digits.get(0), 16);
 					this.num2 = Integer.parseInt(digits.get(2), 16);
 				}
-				
 
 				operation();
 			} catch (Exception e2) {
 				System.out.println("Faltan parametros o el numero proporcionado es incorrecto " + e2);
 				this.mathError = true;
 			}
-		}else if (input_text.equals("B2")) {
-			this.modo.setText("Base: Binario");
-			this.baseNum = 2;
-		}else if (input_text.equals("Owner") || input_text.equals("Info")) {
+		} else if (input_text.equals("Owner") || input_text.equals("Info")) {
 			ventanaEmergente = new VentanaEmergente(input_text);
-		}else if (input_text.equals("Emios")) {
-			//Desktop support
+		} else if (input_text.equals("Emios")) {
+			// Desktop support
 			if (Desktop.isDesktopSupported()) {
-			    Desktop desktop = Desktop.getDesktop();
-			    try {
-			        desktop.browse(new URI("https://github.com/Emanuel-Hosu"));
-			    } catch (IOException eve) {
-			    	System.out.println("Se ha producido un a la hora de abrir la url " + eve);
-			        eve.printStackTrace();
-			    } catch (URISyntaxException ev) {
-			    	System.out.println("Se ha producido un a la hora de abrir la url " + ev);
-			    }
+				Desktop desktop = Desktop.getDesktop();
+				try {
+					desktop.browse(new URI("https://github.com/Emanuel-Hosu"));
+				} catch (IOException eve) {
+					System.out.println("Se ha producido un a la hora de abrir la url " + eve);
+					eve.printStackTrace();
+				} catch (URISyntaxException ev) {
+					System.out.println("Se ha producido un a la hora de abrir la url " + ev);
+				}
 			}
-		}else if (input_text.equals("B8")) {
-			this.modo.setText("Base: Octal");
-			this.baseNum = 8;
+		} else if (input_text.equals("B2")) {
+			changeNumBase(2);
+		} else if (input_text.equals("B8")) {
+			changeNumBase(8);
 		} else if (input_text.equals("B10")) {
-			this.modo.setText("Base: Decimal");
-			this.baseNum = 10;
-		}else if (input_text.equals("B16")) {
-			this.modo.setText("Base: Hexadecimal");
-			this.baseNum = 16;
-		}else if (input_text.equals("Ce")) {
+			changeNumBase(10);
+		} else if (input_text.equals("B16")) {
+			changeNumBase(16);
+		} else if (input_text.equals("Ce")) {
 			this.display.setText("");
 			this.mathError = false;
 		} else if (input_text.equals("DEL")) {
@@ -731,6 +724,57 @@ public class Engine extends JFrame implements ActionListener {
 				this.display.setText(displayText + input_text);
 			}
 
+		}
+	}
+
+	public void changeNumBase(int newBase) {
+		String displayText = display.getText();
+
+		try {
+			// Convertimos el numero segun la base anterior que tenia
+			if (!displayText.isEmpty()) {
+				int decimalValue = Integer.parseInt(displayText, this.baseNum);
+
+				switch (newBase) {
+				case 2:
+					display.setText(Integer.toBinaryString(decimalValue));
+					break;
+				case 8:
+					display.setText(Integer.toOctalString(decimalValue));
+					break;
+				case 10:
+					display.setText(Integer.toString(decimalValue));
+					break;
+				case 16:
+					display.setText(Integer.toHexString(decimalValue).toUpperCase());
+					break;
+				}
+			}
+
+		} catch (NumberFormatException e) {
+			display.setText("Syntax ERROR");
+			this.mathError = true;
+		}
+		
+		if(!this.mathError) {
+			this.baseNum = newBase;
+			this.modo.setText("Base: " + getBaseName(this.baseNum));
+		}
+		
+	}
+
+	public String getBaseName(int base) {
+		switch (base) {
+		case 2:
+			return "Binario";
+		case 8:
+			return "Octal";
+		case 10:
+			return "Decimal";
+		case 16:
+			return "Hexadecimal";
+		default:
+			return "Desconocido";
 		}
 	}
 
@@ -814,7 +858,7 @@ public class Engine extends JFrame implements ActionListener {
 		Pattern pButtonType = Pattern.compile("^\\d");
 		Pattern pHexDigit = Pattern.compile("^[A-F]$");
 		Pattern pBaseType = Pattern.compile("^B\\d+$");
-		
+
 		for (int i = 0; i < buttonPanel.getComponentCount(); i++) {
 			JButton tempButton = (JButton) buttonPanel.getComponent(i);
 			Matcher mButtonType = pButtonType.matcher(tempButton.getText());
