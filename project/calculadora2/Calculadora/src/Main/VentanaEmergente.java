@@ -4,13 +4,17 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.border.LineBorder;
 
 public class VentanaEmergente extends JFrame {
 
@@ -116,17 +120,52 @@ public class VentanaEmergente extends JFrame {
 		for (JButton button : buttons) {
 			setFeatures(button);
 		}
-		
-		// 
 	}
 	
 	public void setFeatures(JButton _button) {
-		if (_button.getText().equals("Github")) { // Si el boton es de github
-			
+		_button.setFont(new Font("Arial", Font.BOLD, 12));
+		//_button.setBorder(new LineBorder(Color.yellow, 2, true));
+		_button.setForeground(Color.WHITE);
+		
+		Color darkButton = new Color(23, 23, 23);
+		Color blueButton = new Color(10, 102, 194);		
+		
+		if (_button.getText().equals("GitHub")) { // Si el boton es de github
+			_button.setBackground(darkButton);
+			// Efecto hover
+			_button.addMouseListener(new MouseAdapter() {
+				public void mouseEntered(MouseEvent e) {
+						_button.setBackground(new Color(13, 13, 13));
+				}
+
+				public void mouseExited(MouseEvent e) {
+						_button.setBackground(darkButton);
+				}
+			});
 		}else if (_button.getText().equals("Linkedin")) { // Si el boton es de linkedin
-			
+			_button.setBackground(blueButton);
+			// Efecto hover
+			_button.addMouseListener(new MouseAdapter() {
+				public void mouseEntered(MouseEvent e) {
+						_button.setBackground(new Color(0, 92, 184));
+				}
+
+				public void mouseExited(MouseEvent e) {
+						_button.setBackground(darkButton);
+				}
+			});
 		}else {
-			
+			_button.setBackground(blueButton);
+			// Efecto hover
+			_button.addMouseListener(new MouseAdapter() {
+				public void mouseEntered(MouseEvent e) {
+						_button.setBackground(new Color(0, 92, 184));
+				}
+
+				public void mouseExited(MouseEvent e) {
+						_button.setBackground(darkButton);
+				}
+			});
 		}
 	}
 }
