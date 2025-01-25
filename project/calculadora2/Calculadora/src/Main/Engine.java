@@ -27,6 +27,10 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 
+
+// Expresion regular para saber si hay algun numero NO seguido de otro simbolo :///////// ^(?!.*[+\-*/]).*\d.*$
+
+
 /**
  * Clase Engine que implementa una calculadora con funcionalidad básica y
  * soporte para modo oscuro. Hereda de JFrame e implementa ActionListener para
@@ -583,7 +587,7 @@ public class Engine extends JFrame implements ActionListener {
 		if (baseNum == 10) {
 			this.result = tempResult;
 		}else if (baseNum == 2) {
-			this.result = Integer.parseInt(Integer.toBinaryString(tempResult)); 			
+			this.result = Integer.parseInt(Integer.toBinaryString(_num1 + _num2));
 		}else if (baseNum == 8) {
 			this.result = Integer.parseInt(Integer.toOctalString(tempResult)); 			
 		}else if (baseNum == 16) {
@@ -605,6 +609,7 @@ public class Engine extends JFrame implements ActionListener {
 		String input_text = e.getActionCommand();
 		String displayText = this.display.getText();
 		String regExp = "";
+		VentanaEmergente ventanaEmergente;
 		// System.out.println("Se ha pulsado " + input_text);
 
 		if (input_text.equals("=") && !this.mathError) {
@@ -615,11 +620,11 @@ public class Engine extends JFrame implements ActionListener {
 				regExp = "((?<=^|[^\\d])-?\\d+(?=$|[^\\d])|[+\\-*\\/()])";
 			}else if (baseNum == 2) { // Cuando la base esta en binario
 				regExp = "((?<=^|[^01])-?[01]+(?=$|[^01])|[+\\-*\\/()])";
-			}else if (baseNum == 8) {
+			}else if (baseNum == 8) { // En caso de que sea octañ
 				regExp = "((?<=^|[^0-7])-?[0-7]+(?=$|[^0-7])|[+\\-*\\/()])";
-			}else if (baseNum == 16) {
+			}else if (baseNum == 16) { // En caso de que sea hexadeciml
 				regExp = "((?<=^|[^0-9a-fA-F])-?[0-9a-fA-F]+(?=$|[^0-9a-fA-F])|[+\\-*\\/()])";
-			}else {
+			}else { // En caso de que no sea ninguna
 				this.mathError = true;
 			}
 			
@@ -633,9 +638,15 @@ public class Engine extends JFrame implements ActionListener {
 			try {
 				this.operation = digits.get(1).charAt(0);
 				
-				if (baseNum != 16) {
+				if (baseNum == 10) {
 					this.num1 = Integer.parseInt(digits.get(0));
 					this.num2 = Integer.parseInt(digits.get(2));
+				}else if(baseNum == 2){
+					this.num1 = Integer.parseInt(digits.get(0), 2);
+					this.num2 = Integer.parseInt(digits.get(2), 2);
+				}else if(baseNum == 8){
+					this.num1 = Integer.parseInt(digits.get(0), 8);
+					this.num2 = Integer.parseInt(digits.get(2), 8);
 				}else {
 					this.num1 = Integer.parseInt(digits.get(0), 16);
 					this.num2 = Integer.parseInt(digits.get(2), 16);
@@ -644,12 +655,14 @@ public class Engine extends JFrame implements ActionListener {
 
 				operation();
 			} catch (Exception e2) {
-				System.out.println("Faltan parametros " + e2);
+				System.out.println("Faltan parametros o el numero proporcionado es incorrecto " + e2);
 				this.mathError = true;
 			}
 		}else if (input_text.equals("B2")) {
 			this.modo.setText("Base: Binario");
 			this.baseNum = 2;
+		}else if (input_text.equals("Owner") || input_text.equals("Info")) {
+			ventanaEmergente = new VentanaEmergente(input_text);
 		}else if (input_text.equals("Emios")) {
 			//Desktop support
 			if (Desktop.isDesktopSupported()) {
