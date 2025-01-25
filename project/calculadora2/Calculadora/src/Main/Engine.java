@@ -726,7 +726,13 @@ public class Engine extends JFrame implements ActionListener {
 
 		}
 	}
-
+	
+	/**
+	 * Cambia la base numérica de los números en la calculadora (binario, octal, decimal o hexadecimal).
+	 * Convierte el número actual en pantalla desde la base actual a la nueva base especificada.
+	 *
+	 * @param newBase La nueva base numérica a la que se quiere convertir el número.
+	 */
 	public void changeNumBase(int newBase) {
 		String displayText = display.getText();
 
@@ -762,7 +768,13 @@ public class Engine extends JFrame implements ActionListener {
 		}
 		
 	}
-
+	
+	/**
+	 * Obtiene el nombre descriptivo de una base numérica.
+	 *
+	 * @param base La base numérica (2 para binario, 8 para octal, 10 para decimal, 16 para hexadecimal).
+	 * @return El nombre de la base numérica como una cadena de texto.
+	 */
 	public String getBaseName(int base) {
 		switch (base) {
 		case 2:

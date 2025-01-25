@@ -22,27 +22,32 @@ import javax.swing.JPanel;
 
 public class VentanaEmergente extends JFrame implements ActionListener {
 
-	/* Marco de la ventana */
+	/** Marco principal de la ventana */
 	private JFrame frame;
-	/* Panel general que ocupa toda la ventana */
+	/** Panel general que ocupa toda la ventana */
 	private JPanel contentPanel;
-	/* Panel sur que contiene el boton de ok */
+	/** Panel inferior que contiene el botón de "Ok" */
 	private JPanel southPanel;
-	/* Panel sur que contiene los botones de las redes */
+	/** Panel central que contiene los botones de las redes sociales */
 	private JPanel centerPanel;
-	/* Panel norte que contiene el texto */
+	/** Panel superior que contiene el texto de información */
 	private JPanel northPanel;
-	/* JLabel para dar la info de la ventana en la que estan */
+	/** Etiqueta que muestra la información del contenido de la ventana */
 	private JLabel information;
-	/* Boton de okey para cerrar la ventana */
+	/** Botón de "Ok" para cerrar la ventana */
 	private JButton okButton;
-	/* Boton de github */
+	/** Botón que redirige al perfil de GitHub */
 	private JButton github;
-	/* Boton de Linkedin */
+	/** Botón que redirige al perfil de LinkedIn */
 	private JButton linkedin;
-	/* String para identificar que ventana abrir */
+	/** Identificador del tipo de ventana a abrir ("Owner" o "Info") */
 	private String frameType;
 
+	/**
+	 * Constructor de la clase VentanaEmergente.
+	 *
+	 * @param _frameType Tipo de ventana a mostrar, puede ser "Owner" o "Info".
+	 */
 	public VentanaEmergente(String _frameType) {
 		frameType = _frameType;
 		frame = new JFrame("Ventana de " + _frameType);
@@ -59,6 +64,11 @@ public class VentanaEmergente extends JFrame implements ActionListener {
 		addActionListener();
 	}
 
+	/**
+	 * Configura los ajustes visuales y funcionales de la ventana emergente, como su
+	 * tamaño, disposición de los paneles, colores y contenido dinámico según el
+	 * tipo de ventana. Ademas de incorporar los disenios de cada ventana
+	 */
 	public void setSettings() {
 		this.frame.setSize(770, 520);
 		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -78,7 +88,7 @@ public class VentanaEmergente extends JFrame implements ActionListener {
 			this.centerPanel.setBackground(redBackground);
 			this.southPanel.setBackground(redBackground);
 			buttonContainer.setBackground(redBackground);
-			
+
 			this.information.setText("<html>" + "<div style=\"display: flex; align-items: center;\">"
 					+ "    <h1 style=\"color: white; margin-right: 10px; font-family: Verdana, Geneva, Tahoma, sans-serif;\">Emanuel Hosu</h1>"
 					+ "    <div style=\"margin-left: 180px;\">"
@@ -97,7 +107,7 @@ public class VentanaEmergente extends JFrame implements ActionListener {
 			this.centerPanel.setBackground(blueBackGround);
 			this.southPanel.setBackground(blueBackGround);
 			buttonContainer.setBackground(blueBackGround);
-			
+
 			this.information.setText("<html>" + "<div style=\"display: flex; align-items: center;\">"
 					+ "    <h1 style=\"color: white;margin-left: 80px; margin-right: 10px; font-family: Verdana, Geneva, Tahoma, sans-serif;\">About the project</h1>"
 					+ "    <div style=\"margin-left: 100px;\">"
@@ -107,9 +117,10 @@ public class VentanaEmergente extends JFrame implements ActionListener {
 					+ "        <p>¡Hola, soy Emi y esta es la versión 2 de mi calculadora, donde hemos ampliado las. \r\n"
 					+ "        <p>funcionalidades para incluir cálculos en sistemas binario, octal, hexadecimal y,</p>\r\n"
 					+ "        <p> por supuesto, decimal. Además de añadir varias cositas más. Este proyecto es para</p>\r\n"
-					+ " <p> la asignatura de Interfaces de 2 DAM. Si quieres saber mas ya sabes ;)</p>" + "    </div>" + "</html>");
+					+ " <p> la asignatura de Interfaces de 2 DAM. Si quieres saber mas ya sabes ;)</p>" + "    </div>"
+					+ "</html>");
 		}
-		
+
 		this.northPanel.add(this.information);
 
 		// Central panel Botones de redes sociales
@@ -137,6 +148,11 @@ public class VentanaEmergente extends JFrame implements ActionListener {
 
 	}
 
+	/**
+	 * Configura el estilo y los efectos de hover para los botones.
+	 *
+	 * @param _button Botón al que se aplicarán las configuraciones.
+	 */
 	public void setFeatures(JButton _button) {
 		_button.setFont(new Font("Arial", Font.BOLD, 12));
 		// _button.setBorder(new LineBorder(Color.yellow, 2, true));
@@ -185,6 +201,9 @@ public class VentanaEmergente extends JFrame implements ActionListener {
 		}
 	}
 
+	/**
+	 * Añade los ActionListener a los botones para manejar sus eventos.
+	 */
 	public void addActionListener() {
 		JButton[] emergentButtons = { okButton, github, linkedin };
 
@@ -193,6 +212,11 @@ public class VentanaEmergente extends JFrame implements ActionListener {
 		}
 	}
 
+	/**
+	 * Maneja los eventos de acción generados por los botones.
+	 *
+	 * @param e Evento de acción generado.
+	 */
 	public void actionPerformed(ActionEvent e) {
 		String input_text = e.getActionCommand();
 		Desktop desktop = Desktop.getDesktop();
